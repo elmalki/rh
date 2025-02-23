@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dotations', function (Blueprint $table) {
-            $table->id();
-            $table->string('label')->nullable();
-            $table->float('value')->unsigned()->nullable();
-            $table->foreignIdFor(\App\Models\Car::class)->nullable();
+        Schema::create('equipe_personnel', function (Blueprint $table) {
+            $table->foreignIdFor(\App\Models\Equipe::class)->constrained()->onDelete('cascade');
             $table->foreignIdFor(\App\Models\Personnel::class)->nullable();
-            $table->foreignIdFor(\App\Models\Mission::class)->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dotations');
+        Schema::dropIfExists('equipe_personnel');
     }
 };

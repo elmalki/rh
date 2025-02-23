@@ -10,15 +10,10 @@ import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ExclamationTriangleIcon } from '@heroicons/vue/20/solid'
-const props = defineProps({budget:Number,cars:Array,personnels:Array,errors: Object})
-const form = useForm({
-    value: null,
-    label: null,
-    car_id:null,
-    personnel_id:null
-})
+const props = defineProps({dotation:Object,budget:Number,cars:Array,personnels:Array,errors: Object})
+const form = useForm(props.dotation)
 const add = () => {
-    form.post(route('dotations.store'), form)
+    form.put(route('dotations.update',{dotation:form.id}), form)
 }
 </script>
 
@@ -27,7 +22,7 @@ const add = () => {
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"
-                             :pages="[{name:'Dotations',href:route('dotations.index'),current:false},{name:'Ajout',href:route('dotations.create'),current:true}]"></Breadcrumbs>
+                             :pages="[{name:'Dotations',href:route('dotations.index'),current:false},{name:'Modifier',href:route('dotations.create'),current:true}]"></Breadcrumbs>
 
             </div>
             <div class="border-l-4 border-red-400 bg-red-50 p-4">

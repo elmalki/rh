@@ -21,7 +21,6 @@ const form = useForm({
     birthday: null,
     driving_license: null,
     is_driver: false,
-    is_married: false,
     children: 0,
     situation: 'Célébataire',
     department_id: null

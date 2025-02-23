@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDotationRequest;
 use App\Http\Requests\UpdateDotationRequest;
+use App\Models\Budget;
 use App\Models\Car;
 use App\Models\Dotation;
 use App\Models\Personnel;
@@ -24,7 +25,7 @@ class DotationController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Dotations/Create',['cars'=>Car::all(),'personnels'=>Personnel::all()]);
+        return Inertia::render('Dotations/Create',['budget'=>Budget::all()->sum('remaining'),'cars'=>Car::all(),'personnels'=>Personnel::all()]);
     }
 
     /**
@@ -32,7 +33,11 @@ class DotationController extends Controller
      */
     public function store(StoreDotationRequest $request)
     {
-        //
+        Dotation::create( $request->all());
+        $budget = Budget::first();
+        $budget->update(['remaining'=>$budget->remaining-$request->value]);
+       return redirect()->route('dotations.index')->banner('Dotation created successfully.');
+
     }
 
     /**

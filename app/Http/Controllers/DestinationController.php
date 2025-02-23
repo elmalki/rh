@@ -30,7 +30,7 @@ class DestinationController extends Controller
      */
     public function store(StoreDestinationRequest $request)
     {
-        //
+        return Destination::create($request->all());
     }
 
     /**
@@ -54,7 +54,8 @@ class DestinationController extends Controller
      */
     public function update(UpdateDestinationRequest $request, Destination $destination)
     {
-        //
+        $destination->update($request->all());
+        return $destination->refresh();
     }
 
     /**

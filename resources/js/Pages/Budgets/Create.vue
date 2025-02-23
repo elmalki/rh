@@ -25,7 +25,7 @@ const add = () => {
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"
-                             :pages="[{name:'Fonctinnaires',href:route('budgets.index'),current:false},{name:'Ajout',href:route('budgets.create'),current:true}]"></Breadcrumbs>
+                             :pages="[{name:'Budgets',href:route('budgets.index'),current:false},{name:'Ajout',href:route('budgets.create'),current:true}]"></Breadcrumbs>
 
             </div>
             <div class="mx-auto mt-5 max-w-5xl flex flex-col gap-4">

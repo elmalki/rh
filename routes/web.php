@@ -34,4 +34,5 @@ Route::middleware([
     Route::resource('personnels', \App\Http\Controllers\PersonnelController::class);
     Route::resource('budgets', \App\Http\Controllers\BudgetController::class);
     Route::resource('dotations', \App\Http\Controllers\DotationController::class);
+    Route::resource('missions', \App\Http\Controllers\MissionController::class);
 });

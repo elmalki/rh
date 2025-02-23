@@ -9,7 +9,7 @@
                 <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                     <button type="button" @click="createOrUpdateModal()"
                             class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        Nouveau Carburant
+                        Nouvelle Destination
                     </button>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                                 </th>
                                 <th scope="col"
                                     class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0">
-                                    Km
+                                   Trajet en Km
                                 </th>
                                 <th scope="col"
                                     class="py-3 pl-4 pr-3 text-right text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0">
@@ -56,8 +56,10 @@
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                     {{ item.label }}
                                 </td>
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                                    {{ item.is_internal }}
+                                <td class="whitespace-nowrap py-4 pl-4 text-white text-sm font-medium sm:pl-0'">
+                                    <span :class="[{'bg-red-500':!item.is_internal,'bg-teal-500':item.is_internal},'px-3 py-1']">
+                                     {{ item.is_internal ? 'OUI':'NON' }}
+                                    </span>
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                     {{ item.trip_km }}
@@ -108,6 +110,18 @@
                     <span v-for="error in form.errors">
                         <InputError :message="error" class="mt-2"/>
                     </span>
+                    <SwitchGroup as="div" class="flex items-center mt-3">
+                        <SwitchLabel as="span" class="mx-2 text-sm">
+                            <span class=" text-lg text-gray-900">Destination interne?</span>
+                        </SwitchLabel>
+                        <Switch v-model="form.is_internal"
+                                :class="[form.is_internal ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:outline-hidden']">
+                            <span aria-hidden="true"
+                                  :class="[form.is_internal ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block size-5 transform rounded-full bg-white ring-0 shadow-sm transition duration-200 ease-in-out']"/>
+                        </Switch>
+
+                    </SwitchGroup>
+
 
                 </div>
             </template>
@@ -127,10 +141,10 @@
         </DialogModal>
         <ConfirmationModal :show="deleteModal" @close="deleteModal=false">
             <template #title>
-                Supprimer le carburant
+                Supprimer le destination
             </template>
             <template #content>
-                Voulez-vous vraiment supprimer ce carburant?
+                Voulez-vous vraiment supprimer ce destination?
             </template>
             <template #footer>
                 <SecondaryButton @click="deleteModal = false">
@@ -160,6 +174,7 @@ import InputError from "@/Components/InputError.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Breadcrumbs from "@/Components/Breadcrumbs.vue";
+import {Switch, SwitchGroup, SwitchLabel} from '@headlessui/vue'
 
 const props = defineProps({items: Array});
 const deleteModal = ref(false)
@@ -179,20 +194,20 @@ const form = useForm({
     errors: []
 });
 const createOrUpdateModal = () => {
-    title.value = item_id.value ? 'Modifier le carburant' : 'Ajouter une nouveau carburant';
+    title.value = item_id.value ? 'Modifier le destination' : 'Ajouter une nouvelle destination';
     button_name.value = item_id.value ? 'Modifier' : 'Ajouter';
     addModal.value = true
 }
 
 function deleteCategory() {
     deleteModal.value = false;
-    router.delete(`/fuels/${item_id.value}`);
+    router.delete(`/destinations/${item_id.value}`);
 }
 
 const createOrEditItem = () => {
     form.processing = true;
     if (!item_id.value) {
-        axios.post(route('fuels.store'), form).then((response) => {
+        axios.post(route('destinations.store'), form).then((response) => {
             form.processing = false;
             props.items.push(response.data)
             closeAddModal();
@@ -204,14 +219,13 @@ const createOrEditItem = () => {
             form.errors = error.response?.data.errors.label;
         });
     } else {
-        axios.put(route('fuels.update', {fuel: item_id.value}), form).then((response) => {
+        axios.put(route('destinations.update', {destination: item_id.value}), form).then((response) => {
             form.processing = false;
             const item = props.items.find(el => response.data.id === el.id)
             item.label = response.data.label
+            item.is_internal = response.data.is_internal
+            item.trip_km = response.data.trip_km
             closeAddModal();
-            nextTick().then(() => {
-            });
-
         }).catch(error => {
             form.processing = false;
             form.errors = error.response?.data.errors.label;

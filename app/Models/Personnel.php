@@ -14,7 +14,7 @@ class Personnel extends Model
     /** @use HasFactory<\Database\Factories\PersonnelFactory> */
     use HasFactory;
 
-    protected $fillable = ['ppr', 'cnie','situation','firstname', 'lastname', 'driving_license', 'birthdate', 'recruitment_date', 'is_driver', 'is_married', 'children', 'department_id'];
+    protected $fillable = ['ppr', 'cnie','situation','firstname', 'lastname', 'driving_license', 'birthdate', 'recruitment_date', 'is_driver', 'children', 'department_id'];
     protected $with = ['department'];
     protected $appends = ['fullname'];
 

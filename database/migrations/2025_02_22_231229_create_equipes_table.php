@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('missions', function (Blueprint $table) {
+        Schema::create('equipes', function (Blueprint $table) {
             $table->id();
-            $table->string('mission')->nullable();
-            $table->date('depart_date')->nullable();
-            $table->date('return_date')->nullable();
-            $table->foreignIdFor(\App\Models\MissionObjective::class)->nullable();
-            $table->foreignIdFor(\App\Models\Destination::class)->nullable();
+            $table->foreignIdFor(\App\Models\Mission::class)->nullable();
+            $table->foreignIdFor(\App\Models\Car::class)->nullable();
+            $table->foreignIdFor(\App\Models\Personnel::class,'driver_id')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('missions');
+        Schema::dropIfExists('equipes');
     }
 };

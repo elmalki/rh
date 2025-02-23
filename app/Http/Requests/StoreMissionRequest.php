@@ -11,7 +11,7 @@ class StoreMissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreMissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'mission'=>'required',
+            'depart_date'=>'required|date|before_or_equal:return_date',
+            'return_date'=>'required|date',
         ];
     }
 }
