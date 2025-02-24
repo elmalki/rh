@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLeaveRequest;
 use App\Http\Requests\UpdateLeaveRequest;
 use App\Models\Leave;
+use App\Models\LeaveType;
+use App\Models\Personnel;
+use Inertia\Inertia;
 
 class LeaveController extends Controller
 {
@@ -13,7 +16,7 @@ class LeaveController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Leaves/Index', ['items' => Leave::paginate(10),'sort_fields'=>request()]);
     }
 
     /**
@@ -21,7 +24,7 @@ class LeaveController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Leaves/Create',['leaveTypes'=>LeaveType::all(),'personnels'=>Personnel::all()]);
     }
 
     /**
@@ -29,7 +32,8 @@ class LeaveController extends Controller
      */
     public function store(StoreLeaveRequest $request)
     {
-        //
+         Leave::create($request->all());
+         return redirect()->route('leave.index')->banner( 'Congé est créé avec succès.');
     }
 
     /**
@@ -45,7 +49,7 @@ class LeaveController extends Controller
      */
     public function edit(Leave $leave)
     {
-        //
+        return Inertia::render('Leaves/Edit',['leave'=>$leave,'leaveTypes'=>LeaveType::all(),'personnels'=>Personnel::all()]);
     }
 
     /**
@@ -53,7 +57,9 @@ class LeaveController extends Controller
      */
     public function update(UpdateLeaveRequest $request, Leave $leave)
     {
-        //
+        $leave->update($request->all());
+        return redirect()->route('leaves.index')->banner( 'Congé est modifé avec succès.');
+
     }
 
     /**

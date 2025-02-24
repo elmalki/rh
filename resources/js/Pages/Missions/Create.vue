@@ -9,6 +9,7 @@ import DatePicker from 'primevue/datepicker';
 import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Select from "primevue/select";
 
 
 const props = defineProps({cars: Array, personnels: Array, errors: Object})
@@ -57,6 +58,17 @@ const add = () => {
 
                 </div>
                 <div class="flex gap-1 mt-3">
+                    <div class="w-full">
+                        <FloatLabel>
+                            <Select class="w-full items-center text-center" as="div" v-model="form.destination_id" :options="destinations" optionLabel="label"
+                                    option-value="id" filter/>
+                            <label for="destination">Destination</label>
+                        </FloatLabel>
+                        <Message v-if="errors.destination_id" severity="error" size="small" variant="simple">{{
+                                errors.destination_id
+                            }}
+                        </Message>
+                    </div>
                     <div class="w-full">
                         <FloatLabel>
                             <DatePicker v-model="form.depart_date" lang="" date-format="yy-mm-dd" class="w-full"/>

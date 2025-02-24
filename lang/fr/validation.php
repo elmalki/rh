@@ -175,5 +175,9 @@ return [
         'depart_date'           => 'date départ',
         'return_date'           => 'date d\'arrivé',
         'mission'           => 'objet de la mission',
+        'personnel_id'=>'fonctionnaire',
+        'leavetype_id'=>'type de congé',
+        'start_date'=>'date départ',
+        'end_date'=>'date de retour',
     ],
 ];

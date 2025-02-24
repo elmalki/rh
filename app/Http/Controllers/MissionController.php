@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMissionRequest;
 use App\Http\Requests\UpdateMissionRequest;
 use App\Models\Car;
+use App\Models\Destination;
+use App\Models\EntityBordereau;
 use App\Models\Equipe;
 use App\Models\Mission;
 use App\Models\Personnel;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class MissionController extends Controller
@@ -33,7 +36,15 @@ class MissionController extends Controller
      */
     public function store(StoreMissionRequest $request)
     {
-        return $request->all();
+        $mission = Mission::create($request->all());
+        foreach ($request->equipes as $item) {
+            $equipe = new Equipe();
+            $equipe->mission_id = $mission->id;
+            $equipe->save();
+            $equipe->update($item);
+            $equipe->personnels()->sync($item['personnels_ids']);
+        }
+        return redirect()->route('missions.index')->banner('Mission Ajouté avec succès');
     }
 
     /**
@@ -49,7 +60,7 @@ class MissionController extends Controller
      */
     public function edit(Mission $mission)
     {
-        return Inertia::render('Missions/Edit',['mission'=>$mission,'cars'=>Car::all(),'personnels'=>Personnel::all()]);
+        return Inertia::render('Missions/Edit',['mission'=>$mission,'destinations'=>Destination::all(),'cars'=>Car::all(),'personnels'=>Personnel::all()]);
     }
 
     /**
@@ -83,5 +94,10 @@ class MissionController extends Controller
     public function destroy(Mission $mission)
     {
         //
+    }
+
+    public function calendar()
+    {
+       return Mission::whereBetween('depart_date',[substr(request()->start,0,10),substr(request()->end,0,10)])->get();
     }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {ref, useTemplateRef} from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
@@ -7,11 +7,25 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-
+import {BellIcon} from '@heroicons/vue/24/solid'
+import {Popover, PopoverButton, PopoverGroup, PopoverPanel} from '@headlessui/vue'
+import {ChevronDownIcon} from "@heroicons/vue/20/solid/index.js";
+import {
+    PlusCircleIcon,
+    MinusCircleIcon,
+    ListBulletIcon,
+    CalendarDaysIcon,
+    BarsArrowDownIcon,
+    MapPinIcon,
+    DocumentIcon,
+    WrenchScrewdriverIcon,
+    BuildingOfficeIcon
+} from "@heroicons/vue/24/outline/index.js";
 defineProps({
     title: String,
 });
-
+const pButton = useTemplateRef('missionsbutton')
+const approButton = useTemplateRef('approButton')
 const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
@@ -49,9 +63,511 @@ const logout = () => {
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                    Tableau de bord
                                 </NavLink>
                             </div>
+                        </div>
+                        <div class="hidden sm:flex  sm:flex-auto justify-evenly items-center  ">
+                            <PopoverGroup class="hidden lg:flex lg:gap-x-12">
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="missionsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('missions.*')||route().current('destination*')">Missions</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PlusCircleIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PlusCircleIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('missions.create')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Ajouter
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('missions.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste des missions
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <CalendarDaysIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></CalendarDaysIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('missions.show_calendar')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Calendrier des missions
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <MapPinIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></MapPinIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('destinations.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste des destinations
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="missionsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('car*')||route().current('fuels.*')||route().current('papers.*')">Véhicule</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PlusCircleIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PlusCircleIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('cars.create')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Ajouter
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('cars.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <DocumentIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></DocumentIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('papers.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Documents de véhicule
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('carbrands.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Marque de véhicule
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('cartypes.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Type de véhicule
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('fuels.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Type de carburants
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="missionsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('maintenance*')">Maintenances</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PlusCircleIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PlusCircleIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenances.create')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Ajouter
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <WrenchScrewdriverIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></WrenchScrewdriverIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenancetypes.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Type de maintenances
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenances.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="missionsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('personnels*')||route().current('depart*')">Fonctionnaires</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PlusCircleIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PlusCircleIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('personnels.create')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Ajouter
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('personnels.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <BuildingOfficeIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></BuildingOfficeIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('departments.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Départements
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="missionsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('leave*')">Congés</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PlusCircleIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PlusCircleIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('leaves.create')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Ajouter
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('leaves.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <WrenchScrewdriverIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></WrenchScrewdriverIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('leavetypes.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Type de congé
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="missionsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('budget*')||route().current('dotation*')">Budget/Dotation</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('budgets.index')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Budgets
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('dotations.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Dotations
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+
+                            </PopoverGroup>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">

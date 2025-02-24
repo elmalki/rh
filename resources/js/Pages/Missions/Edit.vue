@@ -10,8 +10,9 @@ import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {computed} from "vue";
+import Select from "primevue/select";
 
-const props = defineProps({mission:Object,cars:Array,personnels:Array,errors: Object})
+const props = defineProps({mission:Object,cars:Array,personnels:Array,destinations:Array,errors: Object})
 const form = useForm({
     equipes:[],
     deleted:[],
@@ -55,6 +56,17 @@ const add = () => {
                 <div class="flex gap-1 mt-3">
                     <div class="w-full">
                         <FloatLabel>
+                            <Select class="w-full items-center text-center" as="div" v-model="form.destination_id" :options="destinations" optionLabel="label"
+                                    option-value="id" filter/>
+                            <label for="destination">Destination</label>
+                        </FloatLabel>
+                        <Message v-if="errors.destination_id" severity="error" size="small" variant="simple">{{
+                                errors.destination_id
+                            }}
+                        </Message>
+                    </div>
+                    <div class="w-full">
+                        <FloatLabel>
                             <DatePicker v-model="form.depart_date" lang="" date-format="yy-mm-dd" class="w-full"/>
                             <label for="date">Date de départ</label>
                         </FloatLabel>
@@ -84,7 +96,7 @@ const add = () => {
                     </div>
                 </div>
                 <div class="flex justify-end">
-                    <PrimaryButton @click="add()" class=" text-2xl bg-green-600 hover:bg-green-700">Ajouter</PrimaryButton>
+                    <PrimaryButton @click="add()" class=" text-2xl bg-green-600 hover:bg-green-700">Modifier</PrimaryButton>
                 </div>
             </div>
 

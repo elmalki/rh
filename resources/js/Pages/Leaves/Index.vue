@@ -4,12 +4,12 @@
             <div class="sm:flex sm:items-center  max-w-7xl mx-auto mb-10">
                 <div class="sm:flex-auto">
                     <Breadcrumbs class="mb-4"
-                                 :pages="[{name:'Congés',href:route('dotations.index'),current:true}]"></Breadcrumbs>
+                                 :pages="[{name:'Congés',href:route('leaves.index'),current:true}]"></Breadcrumbs>
                 </div>
                 <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <Link :href="route('dotations.create')"
+                    <Link :href="route('leaves.create')"
                           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        Nouvelle dotation
+                        Nouveau congé
                     </Link>
                 </div>
             </div>
@@ -20,20 +20,21 @@
                            :sort-field="sort_fields.field"
                            :sortOrder="sort_fields.order">
                     <template #empty>
-                        <div class="w-full flex text-lg justify-center items-center text-red-500 font-bold">Aucun
-                            dotation trouvé
+                        <div class="w-full flex text-lg justify-center items-center text-red-500 font-bold">
+                            Aucun congé trouvé
                         </div>
                     </template>
-                    <Column field="label" header="Libellé" sortable></Column>
-                    <Column field="personnel.fullname" header="Dotation Restante" sortable></Column>
-                    <Column field="car.plate" header="Véhicule" sortable></Column>
-                    <Column field="value" header="Dotation initial" sortable></Column>
+                    <Column field="personnel.fullname" header="Fonctionnaire" ></Column>
+                    <Column field="leave_type.label" header="Type de congé" ></Column>
+                    <Column field="start_date" header="Date Début" sortable></Column>
+                    <Column field="end_date" header="Date fin" sortable></Column>
+                    <!--Column field="days" header="Nombre de jours" sortable></Column-->
                     <Column header="Actions">
                         <template #body="slotProps">
                             <div class="flex gap-1">
                                 <PencilIcon
                                     class="h-6 text-teal-500  hover:text-teal-600 focus:text-teal-600"
-                                    @click="router.get(route('dotations.edit',{dotation:slotProps.data.id}))"></PencilIcon>
+                                    @click="router.get(route('leaves.edit',{leave:slotProps.data.id}))"></PencilIcon>
                                 <!--TrashIcon class=" h-6 text-red-500 hover:text-red-600 focus:text-red-600"></TrashIcon-->
                             </div>
                         </template>
@@ -41,7 +42,7 @@
                 </DataTable>
                 <div class="maintenanced">
                     <Paginator :rows="items.per_page" v-model:first="page" :totalRecords="items.total"
-                               @page="event=>router.get(route('dotations.'+link),{page:1+event.page})">
+                               @page="event=>router.get(route('leaves.'+link),{page:1+event.page})">
                         <template #start="slotProps">
                         </template>
                         <template #end>
@@ -75,7 +76,7 @@ function can(permission) {
 }
 
 const loadPage = (v) => {
-    router.get(route('dotations.' + props.link ?? 'index'), {field: field._value, order: v})
+    router.get(route('leaves.' + props.link ?? 'index'), {field: field._value, order: v})
 }
 
 </script>

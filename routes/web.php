@@ -35,4 +35,11 @@ Route::middleware([
     Route::resource('budgets', \App\Http\Controllers\BudgetController::class);
     Route::resource('dotations', \App\Http\Controllers\DotationController::class);
     Route::resource('missions', \App\Http\Controllers\MissionController::class);
+    Route::resource('leaves', \App\Http\Controllers\LeaveController::class)->parameter('leaves','leave');
+
+    //calendars
+    Route::get('missions-calendar',function (){
+        return Inertia::render('Missions/Calendar');
+    })->name('missions.show_calendar');
+    Route::post('missions-calendar',[\App\Http\Controllers\MissionController::class,'calendar'])->name('missions.calendar');
 });
