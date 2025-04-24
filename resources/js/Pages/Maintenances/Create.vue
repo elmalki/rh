@@ -9,12 +9,17 @@ import DatePicker from 'primevue/datepicker';
 import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {computed} from "vue";
 const props = defineProps({cars:Array,maintenance_types:Array,errors: Object})
 const form = useForm({
     date:null,
     kilometrage:null,
     car_id:null,
     maintenance_type_id:null
+})
+const car = computed(()=>{
+    const car = form.car_id?props.cars.filter(el=>el.id===form.car_id)[0]:null;
+    return car
 })
 const add = () => {
     form.post(route('maintenances.store'), form)
@@ -43,14 +48,17 @@ const add = () => {
                     </FloatLabel>
                 </div>
                 <div class="flex gap-1 mt-3">
+                    <div class="flex-col w-full">
                     <FloatLabel class="w-full">
-                        <InputText v-model="form.kilometrage" type="number" class="w-full"/>
+                        <InputText v-model="form.kilometrage" type="number" class="w-full" :min="car?car.kilometrage:0"/>
                         <label>Kilométrage</label>
-                        <Message v-if="errors.plate" severity="error" size="small" variant="simple">{{
-                                errors.plate
-                            }}
-                        </Message>
+
                     </FloatLabel>
+                    <Message v-if="errors.plate" severity="error" size="small" variant="simple">{{
+                            errors.plate
+                        }}
+                    </Message>
+                    </div>
                     <FloatLabel class="w-full">
                         <DatePicker v-model="form.date" lang="" date-format="yy-mm-dd" class="w-full"/>
                         <label for="milage">Date d'intervention</label>

@@ -28,7 +28,7 @@ class MissionController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Missions/Create',['cars'=>Car::all(),'personnels'=>Personnel::all()]);
+        return Inertia::render('Missions/Create',['cars'=>Car::all(),'personnels'=>Personnel::all(),'destinations'=>Destination::all()]);
     }
 
     /**

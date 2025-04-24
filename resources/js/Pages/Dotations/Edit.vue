@@ -10,8 +10,11 @@ import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ExclamationTriangleIcon } from '@heroicons/vue/20/solid'
+import Column from "primevue/column";
+import DataTable from "primevue/datatable";
 const props = defineProps({dotation:Object,budget:Number,cars:Array,personnels:Array,errors: Object})
-const form = useForm(props.dotation)
+const form = useForm({...props.dotation})
+const car = props.cars.filter(el=>el.id===props.dotation.car_id)[0]
 const add = () => {
     form.put(route('dotations.update',{dotation:form.id}), form)
 }
@@ -68,16 +71,36 @@ const add = () => {
                         <label for="car">Véhicule</label>
                     </FloatLabel>
                     <FloatLabel class="w-full">
+                        <InputText class="w-full" v-model="form.km" type="number" optionLabel="fullname"
+                                   option-value="id" filter/>
+                        <label for="personnel">Kilométrage</label>
+                    </FloatLabel>
+                    <FloatLabel class="w-full">
                         <Select class="w-full" v-model="form.personnel_id" :options="personnels" optionLabel="fullname"
                                 option-value="id" filter/>
                         <label for="personnel">Fonctionnaire</label>
                     </FloatLabel>
                 </div>
                 <div class="flex justify-end">
-                    <PrimaryButton @click="add()" class="bg-green-600 hover:bg-green-700">Ajouter</PrimaryButton>
+                    <PrimaryButton @click="add()" class="bg-green-600 hover:bg-green-700">Modifier</PrimaryButton>
                 </div>
             </div>
-
+            <DataTable v-if ="car?.maintenance_types.length" :value="car?.maintenance_types" class="mt-6" tableStyle="min-width: 50rem">
+                <Column  header="Type de maintenance" sort-field="label" sortable>
+                    <template #body="slotProps">
+                        {{slotProps.data.label}}({{slotProps.data.kilometrage}}km)
+                    </template>
+                </Column>
+                <Column field="pivot.date" header="Date d'intervention" sortable></Column>
+                <Column field="pivot.km" header="Kilémtrage d'intervention" sortable></Column>
+                <Column  header="Prochain kilométrage" sortable>
+                    <template #body="slotProps">
+                        <span :class="{'bg-red-500 text-white px-3 py-2':form.km>=slotProps.data.pivot.next_km,'bg-green-500 text-white px-3 py-2':form.km<slotProps.data.pivot.next_km}">
+                        {{slotProps.data.pivot.next_km}}
+                        </span>
+                    </template>
+                </Column>
+            </DataTable>
         </div>
     </AppLayout>
 </template>

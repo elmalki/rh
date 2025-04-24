@@ -4,7 +4,7 @@
             <div class="sm:flex sm:items-center  max-w-7xl mx-auto mb-10">
                 <div class="sm:flex-auto">
                     <Breadcrumbs class="mb-4"
-                                 :pages="[{name:'Congés',href:route('dotations.index'),current:true}]"></Breadcrumbs>
+                                 :pages="[{name:'Dotations',href:route('dotations.index'),current:true}]"></Breadcrumbs>
                 </div>
                 <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                     <Link :href="route('dotations.create')"
@@ -25,8 +25,13 @@
                         </div>
                     </template>
                     <Column field="label" header="Libellé" sortable></Column>
-                    <Column field="personnel.fullname" header="Dotation Restante" sortable></Column>
-                    <Column field="car.plate" header="Véhicule" sortable></Column>
+                    <Column field="personnel.fullname" header="Fonctionnaire" sortable></Column>
+                    <Column  header="Véhicule" sortable>
+                        <template #body="slotProps">
+                            {{slotProps.data.car.car_brand.label}}  {{slotProps.data.car.plate}}
+                        </template>
+                    </Column>
+                    <Column field="km" header="Kilométrage" sortable></Column>
                     <Column field="value" header="Dotation initial" sortable></Column>
                     <Column header="Actions">
                         <template #body="slotProps">

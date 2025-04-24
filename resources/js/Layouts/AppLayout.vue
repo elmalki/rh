@@ -326,23 +326,6 @@ const logout = () => {
                                                     class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
                                                     <div
                                                         class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                                        <WrenchScrewdriverIcon
-                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
-                                                            aria-hidden="true"></WrenchScrewdriverIcon>
-                                                    </div>
-                                                    <div class="flex-auto">
-                                                        <Link :href="route('maintenancetypes.index')"
-                                                              class="block font-semibold text-gray-900">
-                                                            Type de maintenances
-                                                            <span class="absolute inset-0"/>
-                                                        </Link>
-                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
-                                                    <div
-                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                                         <ListBulletIcon
                                                             class="size-6 text-gray-600 group-hover:text-indigo-600"
                                                             aria-hidden="true"></ListBulletIcon>
@@ -356,6 +339,24 @@ const logout = () => {
                                                         <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
                                                     </div>
                                                 </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <WrenchScrewdriverIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></WrenchScrewdriverIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenancetypes.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Type de maintenances
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </PopoverPanel>
                                     </transition>

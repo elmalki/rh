@@ -1,6 +1,8 @@
 <script setup>
 
 import AppLayout from "@/Layouts/AppLayout.vue";
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 import Select from "primevue/select";
 import FloatLabel from "primevue/floatlabel";
 import Breadcrumbs from "@/Components/Breadcrumbs.vue";
@@ -10,12 +12,20 @@ import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ExclamationTriangleIcon } from '@heroicons/vue/20/solid'
+import {computed} from "vue";
 const props = defineProps({budget:Number,cars:Array,personnels:Array,errors: Object})
 const form = useForm({
     value: null,
     label: null,
     car_id:null,
+    km:null,
     personnel_id:null
+})
+const car = computed(()=>{
+    const car = form.car_id?props.cars.filter(el=>el.id===form.car_id)[0]:null;
+    console.log(car?.kilometrage)
+    form.km = car?.kilometrage
+    return car
 })
 const add = () => {
     form.post(route('dotations.store'), form)
@@ -73,6 +83,11 @@ const add = () => {
                         <label for="car">Véhicule</label>
                     </FloatLabel>
                     <FloatLabel class="w-full">
+                        <InputText class="w-full" v-model="form.km" type="number" optionLabel="fullname"
+                                   option-value="id" filter/>
+                        <label for="personnel">Kilométrage</label>
+                    </FloatLabel>
+                    <FloatLabel class="w-full">
                         <Select class="w-full" v-model="form.personnel_id" :options="personnels" optionLabel="fullname"
                                 option-value="id" filter/>
                         <label for="personnel">Fonctionnaire</label>
@@ -82,7 +97,22 @@ const add = () => {
                     <PrimaryButton @click="add()" class="bg-green-600 hover:bg-green-700">Ajouter</PrimaryButton>
                 </div>
             </div>
-
+            <DataTable v-if ="car?.maintenance_types.length" :value="car?.maintenance_types" tableStyle="min-width: 50rem">
+                <Column  header="Type de maintenance" sort-field="label" sortable>
+                    <template #body="slotProps">
+                        {{slotProps.data.label}}({{slotProps.data.kilometrage}}km)
+                    </template>
+                </Column>
+                <Column field="pivot.date" header="Date d'intervention" sortable></Column>
+                <Column field="pivot.km" header="Kilémtrage d'intervention" sortable></Column>
+                <Column  header="Prochain kilométrage" sortable>
+                    <template #body="slotProps">
+                        <span :class="{'bg-red-500 text-white px-3 py-2':form.km>=slotProps.data.pivot.next_km,'bg-green-500 text-white px-3 py-2':form.km<slotProps.data.pivot.next_km}">
+                        {{slotProps.data.pivot.next_km}}
+                        </span>
+                    </template>
+                </Column>
+            </DataTable>
         </div>
     </AppLayout>
 </template>

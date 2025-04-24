@@ -25,7 +25,7 @@ class DotationController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Dotations/Create',['budget'=>Budget::all()->sum('remaining'),'cars'=>Car::all(),'personnels'=>Personnel::all()]);
+        return Inertia::render('Dotations/Create',['budget'=>Budget::all()->sum('remaining'),'cars'=>Car::with('maintenance_types')->get(),'personnels'=>Personnel::all()]);
     }
 
     /**
@@ -53,7 +53,7 @@ class DotationController extends Controller
      */
     public function edit(Dotation $dotation)
     {
-        return Inertia::render('Dotations/Create',['dotation'=>$dotation,'cars'=>Car::all(),'personnels'=>Personnel::all()]);
+        return Inertia::render('Dotations/Edit',['budget'=>Budget::all()->sum('remaining'),'dotation'=>$dotation,'cars'=>Car::with('maintenance_types')->get(),'personnels'=>Personnel::all()]);
     }
 
     /**
@@ -61,7 +61,9 @@ class DotationController extends Controller
      */
     public function update(UpdateDotationRequest $request, Dotation $dotation)
     {
-        //
+        $dotation->update($request->all());
+        Car::find($request->car_id)->update(['kilometrage'=>$request->km]);
+        return redirect()->route('dotations.index')->banner('Dotation updated successfully.');
     }
 
     /**

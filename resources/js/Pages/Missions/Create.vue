@@ -12,7 +12,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Select from "primevue/select";
 
 
-const props = defineProps({cars: Array, personnels: Array, errors: Object})
+const props = defineProps({cars: Array, personnels: Array, errors: Object,destinations:Array})
 const form = useForm({
     mission: null,
     depart_date: null,

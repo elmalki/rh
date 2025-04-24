@@ -29,4 +29,8 @@ class Car extends Model
         return $this->belongsToMany(Paper::class,'car_paper','car_id','paper_id')->withPivot(['file','date'])->withTimestamps();
     }
 
+    public function maintenance_types(): BelongsToMany{
+        return $this->belongsToMany(MaintenanceType::class,'car_maintenance_type','car_id','maintenance_type_id')->withPivot(['date','km','next_km']);
+    }
+
 }
