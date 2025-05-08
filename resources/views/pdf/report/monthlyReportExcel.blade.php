@@ -1,7 +1,7 @@
 <table border="1">
     <tbody>
     <tr class="active">
-        <td colspan="3" style="text-align: center">
+        <td colspan="3" style="text-align: center;vertical-align: center;">
             ROYAUME DU MAROC<br>
             MINISTÈRE DE L'INTÉRIEUR<br>
             PROVINCE DE CHTOUKA AIT BAHA<br>
@@ -12,8 +12,8 @@
 
     </tr>
     <tr class="active">
-        <td colspan="8" style="text-align: center">
-            <h1 style="font-size: 18px;">Etat des consommations du: Gasoil, lubrifiant et entretien {{$date}} </h1>
+        <td colspan="8" rowsapn="2" style="vertical-align: top; text-align: center;">
+            Etat des consommations du: Gasoil, lubrifiant et entretien du mois: <span style="text-transform: uppercase">{{$date}}</span>
         </td>
 
     </tr>
@@ -144,7 +144,30 @@
     </tr>
     <tr>
         <td></td>
-        <td colspan="" style="text-align: center;">Le responsable du parc
+        <td colspan="4" style="text-align: center;">Le responsable du parc</td>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr>
+        <td colspan="4"  style="vertical-align: top; text-align: center;" >s/ Jamal RADI</td>
+        <td colspan="4"  style="vertical-align: top; text-align: center;">Vice Président, chargée au secteur des travaux communaux</td>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr>
+        <td colspan="8"  style="vertical-align: top; text-align: center;">Represéntant de la Sté. Chargée de la fourniture du carburant, lubrifiant et d'entretien  </td>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr>
+        <td colspan="8" style="vertical-align: top; text-align: center;">VISA du président de la commune de Massa</td>
     </tr>
     </tbody>
 </table>
