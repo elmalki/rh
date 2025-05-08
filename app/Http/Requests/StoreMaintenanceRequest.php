@@ -22,7 +22,7 @@ class StoreMaintenanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+
         ];
     }
 }

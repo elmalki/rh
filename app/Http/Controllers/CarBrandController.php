@@ -63,6 +63,7 @@ class CarBrandController extends Controller
      */
     public function destroy(CarBrand $carbrand)
     {
-        //
+        //$carbrand->delete();
+        return redirect()->route('carbrands.index')->banner('mission updated successfully');
     }
 }

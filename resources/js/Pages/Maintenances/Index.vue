@@ -24,13 +24,26 @@
                             maintenance trouvé
                         </div>
                     </template>
+                    <Column field="n_bon" header="N° Bon"></Column>
+                    <Column header="Vihécule">
+                        <template #body="slotProps">
+                            {{slotProps.data.car.car_type.label}}  {{slotProps.data.car.car_brand.label}} {{slotProps.data.car.model}}
+                        </template>
+                    </Column>
                     <Column field="car.plate" header="Matricule"></Column>
-                    <Column field="car.car_type.label" header="Type"></Column>
-                    <Column field="car.car_brand.label" header="Marque"></Column>
-                    <Column field="car.model" header="Modèle"></Column>
-                    <Column field="maintenance_type.label" header="Maintenance"></Column>
-                    <Column field="date" header="Date"></Column>
                     <Column field="kilometrage" header="Kilométrage" sortable></Column>
+                    <Column field="montant" header="Montant"></Column>
+                    <Column field="date" header="Date" sortable></Column>
+                    <Column  header="Operations">
+                        <template #body="slotProps">
+                            <span class="mx-1 px-3 text-sm py-1 bg-teal-600 text-white" v-for="item in slotProps.data.operations">{{item}}</span>
+                        </template>
+                    </Column>
+                    <Column field="observation" header="Observation" sortable>
+                        <template #body="slotProps">
+                            <div v-html="slotProps.data.observation"></div>
+                        </template>
+                    </Column>
                     <Column header="Actions">
                         <template #body="slotProps">
                             <div class="flex gap-1">
@@ -44,7 +57,7 @@
                 </DataTable>
                 <div class="maintenanced">
                     <Paginator :rows="items.per_page" v-model:first="page" :totalRecords="items.total"
-                               @page="event=>router.get(route('maintenances.'+link),{page:1+event.page})">
+                               @page="event=>router.get(route('maintenances.index'),{page:1+event.page})">
                         <template #start="slotProps">
                         </template>
                         <template #end>
@@ -82,3 +95,8 @@ const loadPage = (v) => {
 }
 
 </script>
+<style scoped>
+ol{
+    list-style: decimal;
+}
+</style>

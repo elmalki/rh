@@ -8,9 +8,9 @@ use App\Models\Car;
 use App\Models\Destination;
 use App\Models\EntityBordereau;
 use App\Models\Equipe;
+use App\Models\MaintenanceType;
 use App\Models\Mission;
 use App\Models\Personnel;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class MissionController extends Controller
@@ -100,4 +100,6 @@ class MissionController extends Controller
     {
        return Mission::whereBetween('depart_date',[substr(request()->start,0,10),substr(request()->end,0,10)])->get();
     }
+
+
 }

@@ -42,7 +42,7 @@
                 </DataTable>
                 <div class="maintenanced">
                     <Paginator :rows="items.per_page" v-model:first="page" :totalRecords="items.total"
-                               @page="event=>router.get(route('leaves.'+link),{page:1+event.page})">
+                               @page="event=>router.get(route('leaves.index'),{page:1+event.page})">
                         <template #start="slotProps">
                         </template>
                         <template #end>

@@ -30,7 +30,7 @@ class Car extends Model
     }
 
     public function maintenance_types(): BelongsToMany{
-        return $this->belongsToMany(MaintenanceType::class,'car_maintenance_type','car_id','maintenance_type_id')->withPivot(['date','km','next_km']);
+        return $this->belongsToMany(MaintenanceType::class,'car_maintenance_type','car_id','maintenance_type_id')->withPivot(['date','km','next_km','observation']);
     }
 
 }

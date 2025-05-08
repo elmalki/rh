@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMaintenanceTypeRequest;
 use App\Http\Requests\UpdateMaintenanceTypeRequest;
+use App\Models\MaintenanceCategory;
 use App\Models\MaintenanceType;
 use Inertia\Inertia;
 
@@ -22,7 +23,7 @@ class MaintenanceTypeController extends Controller
      */
     public function create()
     {
-
+        return Inertia::render('MaintenanceTypes/Create',['categories'=>MaintenanceCategory::all()]);
     }
 
     /**
@@ -30,7 +31,8 @@ class MaintenanceTypeController extends Controller
      */
     public function store(StoreMaintenanceTypeRequest $request)
     {
-        return MaintenanceType::create($request->all());
+         MaintenanceType::create($request->all());
+        return  redirect()->route('maintenancetypes.index')->banner('Type ajouté avec succés.');
     }
 
     /**
@@ -46,7 +48,7 @@ class MaintenanceTypeController extends Controller
      */
     public function edit(MaintenanceType $maintenancetype)
     {
-        //
+        return Inertia::render('MaintenanceTypes/Edit',['item'=>$maintenancetype,'categories'=>MaintenanceCategory::all()]);
     }
 
     /**
@@ -55,7 +57,7 @@ class MaintenanceTypeController extends Controller
     public function update(UpdateMaintenanceTypeRequest $request, MaintenanceType $maintenancetype)
     {
         $maintenancetype->update($request->all());
-        return $maintenancetype->refresh();
+        return redirect()->route('maintenancetypes.index')->banner('Type modifier avec succés.');
     }
 
     /**
@@ -63,6 +65,7 @@ class MaintenanceTypeController extends Controller
      */
     public function destroy(MaintenanceType $maintenancetype)
     {
-        //
+        $maintenancetype->delete();
+        return  redirect()->route('maintenancetypes.index')->dangerBanner('Type supprimer avec succés.');
     }
 }

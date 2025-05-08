@@ -7,8 +7,9 @@ use App\Http\Requests\UpdateMaintenanceRequest;
 use App\Models\Car;
 use App\Models\Maintenance;
 use App\Models\MaintenanceType;
+use App\Models\MonthlyReport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Inertia\Inertia;
 
 class MaintenanceController extends Controller
@@ -18,7 +19,7 @@ class MaintenanceController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Maintenances/Index', ['items' => Maintenance::paginate(10),'sort_fields'=>request()]);
+        return Inertia::render('Maintenances/Index', ['items' => Maintenance::orderBy('id','desc')->paginate(10),'sort_fields'=>request()]);
     }
 
     /**
@@ -34,14 +35,27 @@ class MaintenanceController extends Controller
      */
     public function store(StoreMaintenanceRequest $request)
     {
-        Maintenance::create( $request->all() );
+
+        $maintenance = Maintenance::create( $request->all() );
+        $maintenance->refresh();
         $date = Carbon::parse($request->date)->addHour()->format('Y-m-d');
         $car  = Car::find($request->car_id);
-        $car->maintenance_types()->syncWithoutDetaching([
-            $request->maintenance_type_id=>
-                ['date'=>$date,'km'=>$request->kilometrage,'next_km'=>MaintenanceType::find($request->maintenance_type_id)->kilometrage+$request->kilometrage]
-        ]);
-        $car->update(['kilometrage'=>$request->kilometrage]);
+        MonthlyReport::create(['car_id'=>$request->car_id,'maintenance_id'=>$maintenance->id,'date'=>$date]);
+        if($car->kilometrage<$request->kilometrage)
+             $car->update(['kilometrage'=>$request->kilometrage]);
+        foreach($request->maintenance_types as $item){
+            $data = ['maintenance_id'=>$maintenance->id,'date' => $date, 'km' => $request->kilometrage, 'next_km' => MaintenanceType::find($item['maintenance_type_id'])->kilometrage??0 + $request->kilometrage];
+            if (isset($item['montant'])){
+                $data['montant'] = $item['montant'];
+            }
+            if (isset($item['observation'])){
+                $data['observation'] = $item['observation'];
+            }
+            $car->maintenance_types()->syncWithoutDetaching([
+                $item['maintenance_type_id']=>$data
+            ]);
+        }
+
         return redirect()->route('maintenances.index')->banner('Maintenance a été créée avec succès.');
     }
 
@@ -66,9 +80,35 @@ class MaintenanceController extends Controller
      */
     public function update(UpdateMaintenanceRequest $request, Maintenance $maintenance)
     {
+        //return $request->all();
         $maintenance->update( $request->all() );
+        $monthlyReport = MonthlyReport::where('maintenance_id',$maintenance->id)->get()->first();
         $car  = Car::find($request->car_id);
-        $car->update(['kilometrage'=>$request->kilometrage]);
+        if($car->kilometrage<$request->kilometrage)
+            $car->update(['kilometrage'=>$request->kilometrage]);
+        $date = Carbon::parse($request->date)->addHour()->format('Y-m-d');
+        $monthlyReport->update(['car_id'=>$request->car_id,'date'=>$date]);
+        $ids = [];
+        foreach($request->maintenance_types as $item){
+            if ( isset($item['maintenance_type_id'])){
+                $data = ['maintenance_id'=>$maintenance->id,'date' => $date, 'km' => $request->kilometrage, 'next_km' => MaintenanceType::find($item['maintenance_type_id'])->kilometrage??0 + $request->kilometrage];
+                if (isset($item['montant'])){
+                    $data['montant'] = $item['montant'];
+                }
+                if (isset($item['observation'])){
+                    $data['observation'] = $item['observation'];
+                }
+                $car->maintenance_types()->syncWithoutDetaching([
+                    $item['maintenance_type_id']=>$data
+                ]);
+                $ids[] = $item['maintenance_type_id'];
+                if($item['id']>0 && $item['maintenance_type_id']!=$item['id'])
+                     $car->maintenance_types()->detach($item['id']);
+            }else{
+                $ids[] = $item['id'];
+            }
+        }
+        $car->maintenance_types()->sync($ids);
         return  redirect()->route('maintenances.index')->banner('Maintenance a été modifiée avec succès.');
     }
 
@@ -79,4 +119,27 @@ class MaintenanceController extends Controller
     {
         //
     }
+
+    public function etat()
+    {
+        return Inertia::render('Maintenances/Etat', ['maintenance_types' => MaintenanceType::all()]);
+    }
+
+    public function getEtat()
+    {
+        return Car::whereHas('maintenance_types', function ($query) {
+            $query->where('maintenance_type_id', request()->maintenance_type_id);
+        })->with(['maintenance_types' => function ($query) {
+            $query->wherePivot('maintenance_type_id', request()->maintenance_type_id);
+        }])->get();
+    }
+
+    public function getEtatPdf()
+    {
+        $cars = $this->getEtat();
+        $pdf = Pdf::loadView('pdf.etat', ['date' => request()->date, 'cars' => $cars])
+            ->setPaper('A4', 'landscape');
+        return $pdf->stream();
+    }
 }
+

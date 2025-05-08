@@ -25,6 +25,7 @@
                         </div>
                     </template>
                     <Column field="label" header="Libellé" sortable></Column>
+                    <Column field="n_bon" header="N°Bon" sortable></Column>
                     <Column field="personnel.fullname" header="Fonctionnaire" sortable></Column>
                     <Column  header="Véhicule" sortable>
                         <template #body="slotProps">
@@ -32,7 +33,13 @@
                         </template>
                     </Column>
                     <Column field="km" header="Kilométrage" sortable></Column>
-                    <Column field="value" header="Dotation initial" sortable></Column>
+                    <Column field="value" header="Dotation" sortable></Column>
+                    <Column field="price" header="Prix de litre" sortable></Column>
+                    <Column  header="Qté" >
+                        <template #body="slotProps">
+                            {{(slotProps.data.value/slotProps.data.price).toFixed(2)}}L
+                        </template>
+                    </Column>
                     <Column header="Actions">
                         <template #body="slotProps">
                             <div class="flex gap-1">
@@ -46,7 +53,7 @@
                 </DataTable>
                 <div class="maintenanced">
                     <Paginator :rows="items.per_page" v-model:first="page" :totalRecords="items.total"
-                               @page="event=>router.get(route('dotations.'+link),{page:1+event.page})">
+                               @page="event=>router.get(route('dotations.index'),{page:1+event.page})">
                         <template #start="slotProps">
                         </template>
                         <template #end>

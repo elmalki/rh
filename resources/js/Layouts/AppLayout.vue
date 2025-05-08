@@ -356,7 +356,23 @@ const logout = () => {
                                                         <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
                                                     </div>
                                                 </div>
-
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <WrenchScrewdriverIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></WrenchScrewdriverIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenancecategories.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Catégories de maintenances
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
                                             </div>
                                         </PopoverPanel>
                                     </transition>
@@ -657,6 +673,14 @@ const logout = () => {
 
                                         <DropdownLink :href="route('profile.show')">
                                             Profile
+                                        </DropdownLink>
+                                        <DropdownLink :href="route('users.index')"
+                                                      v-if="$page.props.auth.user.roles[0]?.name=='Administrateur'">
+                                            Gestion des utilisateurs
+                                        </DropdownLink>
+                                        <DropdownLink :href="route('roles.index')"
+                                                      v-if="$page.props.auth.user.roles[0]?.name=='Administrateur'">
+                                            Gestion des Rôles
                                         </DropdownLink>
 
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">

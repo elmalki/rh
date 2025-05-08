@@ -10,7 +10,7 @@ class Dotation extends Model
 {
     /** @use HasFactory<\Database\Factories\DotationFactory> */
     use HasFactory;
-    protected $fillable = ['label','value','car_id','personnel_id','mission_id','km'];
+    protected $fillable = ['label','n_bon','value','car_id','personnel_id','mission_id','km','price'];
     protected $with = ['car','personnel'];
     public function car(): BelongsTo{
         return $this->belongsTo(Car::class);

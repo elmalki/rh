@@ -1,6 +1,7 @@
 <script setup>
 
 import AppLayout from "@/Layouts/AppLayout.vue";
+import MaintenanceTypeInput from "@/Pages/MaintenanceTypes/MaintenanceTypeInput.vue";
 import Select from "primevue/select";
 import FloatLabel from "primevue/floatlabel";
 import Breadcrumbs from "@/Components/Breadcrumbs.vue";
@@ -9,20 +10,34 @@ import DatePicker from 'primevue/datepicker';
 import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Editor from 'primevue/editor';
 import {computed} from "vue";
+import Equipe from "@/Pages/Missions/Equipe.vue";
 const props = defineProps({cars:Array,maintenance_types:Array,errors: Object})
 const form = useForm({
+    n_bon:null,
     date:null,
     kilometrage:null,
+    observation:null,
     car_id:null,
-    maintenance_type_id:null
+    montant:null,
+    maintenance_types:[]
 })
 const car = computed(()=>{
     const car = form.car_id?props.cars.filter(el=>el.id===form.car_id)[0]:null;
     return car
 })
+
 const add = () => {
     form.post(route('maintenances.store'), form)
+}
+let id = -1000;
+const addMaintenanceType  =()=>{
+    id++;
+    form.maintenance_types.push({id: id})
+}
+const removeMaintenanceType = (index) => {
+    form.maintenance_types.splice(index, 1)
 }
 </script>
 
@@ -36,25 +51,46 @@ const add = () => {
             </div>
             <div class="mx-auto mt-5 max-w-5xl flex flex-col gap-4">
                 <div class="flex gap-1 mt-3">
+                    <div class="w-full">
                     <FloatLabel class="w-full">
-                        <Select class="w-full" v-model="form.car_id" :options="cars" optionLabel="plate"
+                        <InputText v-model="form.n_bon" type="text" class="w-full"/>
+                        <label>N° Bon</label>
+
+                    </FloatLabel>
+                    <Message v-if="errors.n_bon" severity="error" size="small" variant="simple">{{
+                            errors.n_bon
+                        }}
+                    </Message>
+                    </div>
+                    <FloatLabel class="w-full">
+                        <Select class="w-full" v-model="form.car_id" :options="cars" :optionLabel="el=>el.car_type.label+' ' +el.car_brand.label+' '+el.model+' '+el.plate"
                                 option-value="id" filter/>
                         <label for="Véhicule">Véhicule</label>
                     </FloatLabel>
-                    <FloatLabel class="w-full">
-                        <Select class="w-full" v-model="form.maintenance_type_id" :options="maintenance_types" optionLabel="label"
-                                option-value="id" filter/>
-                        <label for="type">Type de maintenance</label>
-                    </FloatLabel>
+                    <div class="flex-col w-full">
+                        <FloatLabel class="w-full">
+                            <InputText v-model="form.montant" type="number" step="0.01" class="w-full" min="0"/>
+                            <label>Montant</label>
+
+                        </FloatLabel>
+                        <Message v-if="errors.montant" severity="error" size="small" variant="simple">{{
+                                errors.montant
+                            }}
+                        </Message>
+                    </div>
                 </div>
                 <div class="flex gap-1 mt-3">
                     <div class="flex-col w-full">
                     <FloatLabel class="w-full">
-                        <InputText v-model="form.kilometrage" type="number" class="w-full" :min="car?car.kilometrage:0"/>
+                        <InputText v-model="form.kilometrage" type="number" class="w-full"  :min="car?car.kilometrage:0"/>
                         <label>Kilométrage</label>
-
                     </FloatLabel>
-                    <Message v-if="errors.plate" severity="error" size="small" variant="simple">{{
+                        <Message severity="success" size="small" variant="simple">
+                            {{
+                                car?.kilometrage
+                            }}
+                        </Message>
+                    <Message v-if="errors.kilometrage" severity="error" size="small" variant="simple">{{
                             errors.plate
                         }}
                     </Message>
@@ -63,6 +99,25 @@ const add = () => {
                         <DatePicker v-model="form.date" lang="" date-format="yy-mm-dd" class="w-full"/>
                         <label for="milage">Date d'intervention</label>
                     </FloatLabel>
+                </div>
+                <FloatLabel class="w-full mt-3">
+                    <Editor v-model="form.observation" placeholder="Observations" editorStyle="height: 200px" />
+                </FloatLabel>
+                <div>
+                    <button @click="addMaintenanceType()"
+                            class="bg-blue-600  px-2 py-2 rounded-lg items-center text-white  justify-center hover:bg-blue-700">
+                        Ajouter
+                    </button>
+                </div>
+                <div v-for="(item,i) in form.maintenance_types" class="w-full" :key="item.id">
+                    <div class="flex gap-1 w-full mt-2">
+                        <button @click="removeMaintenanceType(i)"
+                                class=" bg-red-600  rounded-lg size-10 items-center text-white  justify-center hover:bg-red-700">
+                            x
+                        </button>
+                        <MaintenanceTypeInput class="w-full" :maintenance_types="maintenance_types"
+                                @uploaded="value=>form.maintenance_types[i]={...form.maintenance_types[i],...value}"></MaintenanceTypeInput>
+                    </div>
                 </div>
                 <div class="flex justify-end">
                     <PrimaryButton @click="add()" class="bg-green-600 hover:bg-green-700">Ajouter</PrimaryButton>

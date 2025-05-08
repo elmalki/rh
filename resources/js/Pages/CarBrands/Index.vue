@@ -37,10 +37,6 @@
                                     Libellé
                                 </th>
                                 <th scope="col"
-                                    class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0">
-                                    Nombre
-                                </th>
-                                <th scope="col"
                                     class="py-3 pl-4 pr-3 text-right text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0">
                                     Actions
                                 </th>
@@ -50,9 +46,6 @@
                             <tr v-for="item in filtered" :key="item.id">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                     {{ item.label }}
-                                </td>
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                                    {{ item.total }}
                                 </td>
                                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                                     <button @click="item_id=item.id,form.label=item.label,createOrUpdateModal()" href="#"

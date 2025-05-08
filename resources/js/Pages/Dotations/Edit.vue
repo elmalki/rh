@@ -12,6 +12,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ExclamationTriangleIcon } from '@heroicons/vue/20/solid'
 import Column from "primevue/column";
 import DataTable from "primevue/datatable";
+import Maintenances from "@/Pages/Cars/Maintenances.vue";
 const props = defineProps({dotation:Object,budget:Number,cars:Array,personnels:Array,errors: Object})
 const form = useForm({...props.dotation})
 const car = props.cars.filter(el=>el.id===props.dotation.car_id)[0]
@@ -21,7 +22,7 @@ const add = () => {
 </script>
 
 <template>
-    <AppLayout title="Ajout de dotation">
+    <AppLayout title="Modifier de dotation">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"
@@ -53,6 +54,14 @@ const add = () => {
                         </Message>
                     </FloatLabel>
                     <FloatLabel class="w-full">
+                        <InputText v-model="form.n_bon" type="text" class="w-full"/>
+                        <label>N°Bon</label>
+                        <Message v-if="errors.n_bon" severity="error" size="small" variant="simple">{{
+                                errors.n_bon
+                            }}
+                        </Message>
+                    </FloatLabel>
+                    <FloatLabel class="w-full">
                         <InputText v-model="form.value" type="number" step="0.01" :max="budget" class="w-full"/>
                         <label>Montant</label>
                         <Message v-if="form.value>budget" severity="error" size="small" variant="simple">
@@ -60,6 +69,14 @@ const add = () => {
                         </Message>
                         <Message v-if="errors.value" severity="error" size="small" variant="simple">{{
                                 errors.value
+                            }}
+                        </Message>
+                    </FloatLabel>
+                    <FloatLabel class="w-full">
+                        <InputText v-model="form.price" type="number" step="0.01" min="0" class="w-full"/>
+                        <label>Prix de litre</label>
+                        <Message v-if="errors.price" severity="error" size="small" variant="simple">{{
+                                errors.price
                             }}
                         </Message>
                     </FloatLabel>
@@ -85,22 +102,8 @@ const add = () => {
                     <PrimaryButton @click="add()" class="bg-green-600 hover:bg-green-700">Modifier</PrimaryButton>
                 </div>
             </div>
-            <DataTable v-if ="car?.maintenance_types.length" :value="car?.maintenance_types" class="mt-6" tableStyle="min-width: 50rem">
-                <Column  header="Type de maintenance" sort-field="label" sortable>
-                    <template #body="slotProps">
-                        {{slotProps.data.label}}({{slotProps.data.kilometrage}}km)
-                    </template>
-                </Column>
-                <Column field="pivot.date" header="Date d'intervention" sortable></Column>
-                <Column field="pivot.km" header="Kilémtrage d'intervention" sortable></Column>
-                <Column  header="Prochain kilométrage" sortable>
-                    <template #body="slotProps">
-                        <span :class="{'bg-red-500 text-white px-3 py-2':form.km>=slotProps.data.pivot.next_km,'bg-green-500 text-white px-3 py-2':form.km<slotProps.data.pivot.next_km}">
-                        {{slotProps.data.pivot.next_km}}
-                        </span>
-                    </template>
-                </Column>
-            </DataTable>
+            <Maintenances v-if ="car?.maintenance_types.length" :data="car?.maintenance_types" :km="form.km"></Maintenances>
+
         </div>
     </AppLayout>
 </template>

@@ -7,10 +7,10 @@
                                  :pages="[{name:'Type de mantenance',href:route('maintenancetypes.index'),current:true}]"></Breadcrumbs>
                 </div>
                 <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <button type="button" @click="createOrUpdateModal()"
+                    <Link :href="route('maintenancetypes.create')"
                             class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         Nouveau type
-                    </button>
+                    </Link>
                 </div>
             </div>
             <div class="mt-8 flow-root">
@@ -42,6 +42,10 @@
                                     Kilométrage
                                 </th>
                                 <th scope="col"
+                                    class="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0">
+                                    Catégorie
+                                </th>
+                                <th scope="col"
                                     class="py-3 pl-4 pr-3 text-right text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0">
                                     Actions
                                 </th>
@@ -55,12 +59,13 @@
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                                     {{ item.kilometrage }}
                                 </td>
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                    {{ item.maintenance_category?.label }}
+                                </td>
                                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                    <button @click="item_id=item.id,form.label=item.label,form.kilometrage=item.kilometrage,createOrUpdateModal()"
-                                            href="#"
+                                    <button @click="router.get(route('maintenancetypes.edit',{maintenancetype:item.id}))"
                                             class="text-green-600 px-3 hover:text-green-700"
-                                    >Modifier<span class="sr-only">, {{ item.label }}</span></button
-                                    >
+                                    >Modifier<span class="sr-only">, {{ item.label }}</span></button>
                                     <button @click="deleteModal=true,item_id=item.id"
                                             class="text-red-600  hover:text-red-7r00"
                                     >Supprimer<span class="sr-only">, {{ item.label }}</span></button
@@ -73,53 +78,6 @@
                 </div>
             </div>
         </div>
-        <DialogModal :show="addModal" @close="closeAddModal()">
-            <template #title>
-                {{ title }}
-            </template>
-            <template #content>
-                <div class="mt-4" @keydown.enter="createOrEditItem()">
-                    <TextInput
-                        ref="label"
-                        v-model="form.label"
-                        type="text"
-                        class="mt-1 block w-3/4 border"
-                        placeholder="Libellé"
-                        autocomplete="Libellé"
-                    />
-                    <Message v-if="errors.label" severity="error" size="small" variant="simple">
-                        {{errors.label}}
-                    </Message>
-                </div>
-                <div class="mt-4" @keydown.enter="createOrEditItem()">
-                    <TextInput
-                        ref="label"
-                        v-model="form.kilometrage"
-                        type="number"
-                        class="mt-1 block w-3/4 border"
-                        placeholder="Kilométrage"
-                        autocomplete="Kilométrage"
-                    />
-                    <Message v-if="errors.kilometrage" severity="error" size="small" variant="simple">
-                        {{ errors.kilometrage }}
-                    </Message>
-
-                </div>
-            </template>
-            <template #footer>
-                <SecondaryButton @click="closeAddModal()">
-                    Annuler
-                </SecondaryButton>
-                <PrimaryButton
-                    class="ms-3"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    @click="createOrEditItem()"
-                >
-                    {{ button_name }}
-                </PrimaryButton>
-            </template>
-        </DialogModal>
         <ConfirmationModal :show="deleteModal" @close="deleteModal=false">
             <template #title>
                 Supprimer le type
@@ -145,7 +103,7 @@
 
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import {router,useForm} from '@inertiajs/vue3';
+import {Link, router, useForm} from '@inertiajs/vue3';
 import {computed, nextTick, reactive, ref} from "vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import DangerButton from "@/Components/DangerButton.vue";
@@ -155,6 +113,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Breadcrumbs from "@/Components/Breadcrumbs.vue";
 import Message from 'primevue/message';
+import Select from 'primevue/select';
+import {PencilIcon} from "@heroicons/vue/20/solid/index.js";
 
 const props = defineProps({items: Array, errors: Object});
 const deleteModal = ref(false)
@@ -166,12 +126,7 @@ const button_name = ref('')
 let filtered = computed(() => props.items.filter(item =>
     !search.value || item.label.toLowerCase().includes(search.value.toLowerCase())
 ));
-const form = useForm({
-    label: '',
-    kilometrage: null,
-    processing: false,
-    errors: []
-});
+
 const createOrUpdateModal = () => {
     title.value = item_id.value ? 'Modifier le type' : 'Ajouter une nouveau type';
     button_name.value = item_id.value ? 'Modifier' : 'Ajouter';
@@ -180,7 +135,7 @@ const createOrUpdateModal = () => {
 
 function deleteCategory() {
     deleteModal.value = false;
-    router.delete(`/maintenancetypes/${item_id.value}`);
+    router.delete(route('maintenancetypes.destroy',{maintenancetype:item_id.value}));
 }
 
 const createOrEditItem = () => {
@@ -188,7 +143,8 @@ const createOrEditItem = () => {
     if (!item_id.value) {
         axios.post(route('maintenancetypes.store'), {
             label: form.label,
-            kilometrage:form.kilometrage
+            kilometrage:form.kilometrage,
+            maintenance_category_id:form.maintenance_category_id
         }).then((response) => {
             form.processing = false;
             props.items.push(response.data)
@@ -205,6 +161,7 @@ const createOrEditItem = () => {
         axios.put(route('maintenancetypes.update', {maintenancetype: item_id.value}), {
             label: form.label,
             kilometrage: form.kilometrage,
+            maintenance_category_id:form.maintenance_category_id
         }).then((response) => {
             form.processing = false;
             const item = props.items.find(el => response.data.id === el.id)

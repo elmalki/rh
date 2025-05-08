@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateDotationRequest;
 use App\Models\Budget;
 use App\Models\Car;
 use App\Models\Dotation;
+use App\Models\MonthlyReport;
 use App\Models\Personnel;
 use Inertia\Inertia;
 
@@ -33,11 +34,12 @@ class DotationController extends Controller
      */
     public function store(StoreDotationRequest $request)
     {
-        Dotation::create( $request->all());
+        $dotation = Dotation::create($request->all());
         $budget = Budget::first();
+        MonthlyReport::create(['car_id' => $request->car_id, 'dotation_id' => $dotation->id, 'date' => $dotation->created_at]);
         $budget->update(['remaining'=>$budget->remaining-$request->value]);
+        Car::find($request->car_id)->update(['kilometrage' => $request->km]);
        return redirect()->route('dotations.index')->banner('Dotation created successfully.');
-
     }
 
     /**
@@ -62,6 +64,8 @@ class DotationController extends Controller
     public function update(UpdateDotationRequest $request, Dotation $dotation)
     {
         $dotation->update($request->all());
+        $monthlyReport = MonthlyReport::where('dotation_id', $dotation->id)->get()->first();
+        $monthlyReport->update(['car_id' => $request->car_id]);
         Car::find($request->car_id)->update(['kilometrage'=>$request->km]);
         return redirect()->route('dotations.index')->banner('Dotation updated successfully.');
     }

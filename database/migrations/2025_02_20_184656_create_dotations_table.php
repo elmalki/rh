@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('dotations', function (Blueprint $table) {
             $table->id();
             $table->string('label')->nullable();
-            $table->float('value')->unsigned()->nullable();
+            $table->string('n_bon')->nullable();
+            $table->decimal('value',10,2)->unsigned()->nullable();
             $table->foreignIdFor(\App\Models\Car::class)->nullable();
             $table->foreignIdFor(\App\Models\Personnel::class)->nullable();
             $table->foreignIdFor(\App\Models\Mission::class)->nullable();
