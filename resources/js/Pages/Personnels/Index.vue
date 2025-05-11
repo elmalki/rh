@@ -80,7 +80,7 @@ function can(permission) {
 }
 
 const loadPage = (v) => {
-    router.get(route('personnels.' + props.link ?? 'index'), {field: field._value, order: v})
+    router.get(route('personnels.index'), {field: field._value, order: v})
 }
 
 </script>

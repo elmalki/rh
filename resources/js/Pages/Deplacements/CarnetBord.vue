@@ -8,26 +8,39 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {ref} from "vue";
 import {saveAs} from 'file-saver';
 import moment from 'moment';
-import 'moment/dist/locale/fr'; // ✅ Correct path for Vite + ES Modules
+import 'moment/dist/locale/fr';
+import Select from "primevue/select"; // ✅ Correct path for Vite + ES Modules
 moment.locale('fr'); // Import the French locale
 const items = ref([])
-const props = defineProps({ errors: Object})
+const props = defineProps({ cars:Array,errors: Object})
 const form = useForm({
-   date: null
+    date: null,
+    car_id:null
 })
 const search = () => {
 
 }
 const downloadState =()=> {
+    /*
     form.processing = true
     axios
         .post(
-            "monthlyReport",
-            { data:moment(form.date).format('MMMM YYYY'),month:moment(form.date).format('M'),year:moment(form.date).format('YYYY') },
+            "carnetDeBordReport",
+            { car_id:form.car_id,data:moment(form.date).format('MMMM YYYY'),month:moment(form.date).format('M'),year:moment(form.date).format('YYYY') }
+        ).then(response => {
+            form.processing = false;
+        });
+    return;
+    *
+     */
+    axios
+        .post(
+            "carnetDeBordReport",
+            { car_id:form.car_id,data:moment(form.date).format('MMMM YYYY'),month:moment(form.date).format('M'),year:moment(form.date).format('YYYY') },
             {
                 responseType: "blob",
                 headers: {
-                   "Content-Type": "application/msword"
+                    "Content-Type": "application/msword"
                 }
             }
         )
@@ -36,7 +49,7 @@ const downloadState =()=> {
             var blob = new Blob([response.data]);
             saveAs(
                 blob,
-                "etat_" + moment(form.date).format('MMMM YYYY') + "_.xlsx"
+                "carnet_de_bord_" + moment(form.date).format('MMMM YYYY') + "_.xlsx"
             );
         });
 }
@@ -53,7 +66,12 @@ const downloadState =()=> {
             <div class="mx-auto mt-5 max-w-5xl flex gap-4">
                 <FloatLabel class="w-1/2">
                     <DatePicker class="w-full" v-model="form.date" view="month" dateFormat="MM yy" />
-                    <label for="type">Type de maintenance</label>
+                    <label for="type">Date</label>
+                </FloatLabel>
+                <FloatLabel class="w-1/2">
+                    <Select class="w-full" v-model="form.car_id" :options="cars" :optionLabel="el=>el.car_type.label+' ' +el.car_brand.label+' '+el.model+' '+el.plate"
+                            option-value="id" filter/>
+                    <label for="Véhicule">Véhicule</label>
                 </FloatLabel>
                 <PrimaryButton :disabled="!form.date||form.processing" @click="downloadState()" class="bg-orange-600 hover:bg-orange-700"
                 >{{form.processing?'En cours...':'Télécharger'}}

@@ -23,8 +23,11 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('carnetDeBord', [\App\Http\Controllers\DeplacementController::class, 'carnetDeBord'])->name('carnetDeBord');
+    Route::post('carnetDeBordReport', [\App\Http\Controllers\DeplacementController::class, 'carnetDeBordReport'])->name('carnetDeBordReport');
     Route::get('chooseMonth', [ReportController::class, 'chooseMonth'])->name('chooseMonth');
     Route::post('monthlyReport', [ReportController::class, 'monthlyReport'])->name('monthlyReport');
+    Route::resource('deplacements', \App\Http\Controllers\DeplacementController::class);
     Route::resource('fuels', \App\Http\Controllers\FuelController::class);
     Route::resource('destinations', \App\Http\Controllers\DestinationController::class);
     Route::resource('cartypes', \App\Http\Controllers\CarTypeController::class);

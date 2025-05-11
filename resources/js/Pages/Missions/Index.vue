@@ -96,7 +96,7 @@ function can(permission) {
 }
 
 const loadPage = (v) => {
-    router.get(route('missions.' + props.link ?? 'index'), {field: field._value, order: v})
+    router.get(route('missions.index'), {field: field._value, order: v})
 }
 
 </script>

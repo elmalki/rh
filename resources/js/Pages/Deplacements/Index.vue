@@ -1,15 +1,15 @@
 <template>
-    <AppLayout title="Liste des maintenances">
+    <AppLayout title="Liste des deplacements">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-8xl mx-auto">
             <div class="sm:flex sm:items-center  max-w-7xl mx-auto mb-10">
                 <div class="sm:flex-auto">
                     <Breadcrumbs class="mb-4"
-                                 :pages="[{name:'Maintenances',href:route('maintenances.index'),current:true}]"></Breadcrumbs>
+                                 :pages="[{name:'Déplacements',href:route('deplacements.index'),current:true}]"></Breadcrumbs>
                 </div>
                 <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <Link v-if="can('Ajouter bordereau') " :href="route('maintenances.create')"
+                    <Link :href="route('deplacements.create')"
                           class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        Nouveau maintenance
+                        Nouveau déplacement
                     </Link>
                 </div>
             </div>
@@ -21,43 +21,38 @@
                            :sortOrder="sort_fields.order">
                     <template #empty>
                         <div class="w-full flex text-lg justify-center items-center text-red-500 font-bold">Aucun
-                            maintenance trouvé
+                            déplacement trouvé
                         </div>
                     </template>
-                    <Column field="n_bon" header="N° Bon"></Column>
+                    <Column field="date" header="Date"></Column>
                     <Column header="Vihécule">
                         <template #body="slotProps">
                             {{slotProps.data.car.car_type.label}}  {{slotProps.data.car.car_brand.label}} {{slotProps.data.car.model}}
                         </template>
                     </Column>
-                    <Column field="car.plate" header="Matricule"></Column>
-                    <Column field="kilometrage" header="Kilométrage" sortable></Column>
-                    <Column field="montant" header="Montant"></Column>
-                    <Column field="date" header="Date" sortable></Column>
-                    <Column  header="Operations">
+                    <Column field="km_depart" header="Kilométrage de départ"></Column>
+                    <Column field="km_arrivee" header="Kilométrage d'arrivée"></Column>
+                    <Column  header="Distance">
                         <template #body="slotProps">
-                            <span class="mx-1 px-3 text-sm py-1 bg-teal-600 text-white" v-for="item in slotProps.data.operations">{{item}}</span>
+                            {{slotProps.data.km_arrivee-slotProps.data.km_depart}}
                         </template>
                     </Column>
-                    <Column field="observation" header="Observation" sortable>
-                        <template #body="slotProps">
-                            <div v-html="slotProps.data.observation"></div>
-                        </template>
-                    </Column>
+                    <Column field="motif" header="Motif" sortable></Column>
+                    <Column field="personnel.fullname" header="Conducteur" sortable></Column>
                     <Column header="Actions">
                         <template #body="slotProps">
                             <div class="flex gap-1">
                                 <PencilIcon
-                                            class="h-6 text-teal-500  hover:text-teal-600 focus:text-teal-600"
-                                            @click="router.get(route('maintenances.edit',{maintenance:slotProps.data.id}))"></PencilIcon>
+                                    class="h-6 text-teal-500  hover:text-teal-600 focus:text-teal-600"
+                                    @click="router.get(route('deplacements.edit',{deplacement:slotProps.data.id}))"></PencilIcon>
                                 <!--TrashIcon class=" h-6 text-red-500 hover:text-red-600 focus:text-red-600"></TrashIcon-->
                             </div>
                         </template>
                     </Column>
                 </DataTable>
-                <div class="maintenanced">
+                <div class="deplacementd">
                     <Paginator :rows="items.per_page" v-model:first="page" :totalRecords="items.total"
-                               @page="event=>router.get(route('maintenances.index'),{page:1+event.page})">
+                               @page="event=>router.get(route('deplacements.index'),{page:1+event.page})">
                         <template #start="slotProps">
                         </template>
                         <template #end>
@@ -91,7 +86,7 @@ function can(permission) {
 }
 
 const loadPage = (v) => {
-    router.get(route('maintenances.index'), {field: field._value, order: v})
+    router.get(route('deplacements.index'), {field: field._value, order: v})
 }
 
 </script>

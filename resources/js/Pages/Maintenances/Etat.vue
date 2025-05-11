@@ -25,6 +25,7 @@ const search = () => {
         })
 }
 const downloadState =()=> {
+    form.processing = true;
     axios
         .post(
             "etatPdf",
@@ -37,6 +38,7 @@ const downloadState =()=> {
             }
         )
         .then(response => {
+            form.processing=false;
             var blob = new Blob([response.data], { type: "application/pdf" });
             saveAs(
                 blob,
@@ -66,8 +68,8 @@ const downloadState =()=> {
                                    :disabled="!form.maintenance_type_id">Chercher
                     </PrimaryButton>
                 </div>
-                <PrimaryButton v-if="items.length" @click="downloadState()" class="bg-orange-600 hover:bg-orange-700"
-                >Télécharger
+                <PrimaryButton v-if="items.length" @click="downloadState()" :disabled="form.processing" class="bg-orange-600 hover:bg-orange-700"
+                >Télécharger {{form.processing?'En cours...':'Téléchargement'}}
                 </PrimaryButton>
             </div>
         </div>

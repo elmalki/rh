@@ -18,6 +18,7 @@ class ReportController extends Controller
     {
         return Inertia::render('Reports/ChooseMonth');
     }
+
     public function monthlyReport()
     {
         return Excel::download(new MonthlyReportExcel(request()->json()->all()),'invoice.xlsx');

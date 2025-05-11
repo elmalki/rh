@@ -76,7 +76,7 @@ function can(permission) {
 }
 
 const loadPage = (v) => {
-    router.get(route('leaves.' + props.link ?? 'index'), {field: field._value, order: v})
+    router.get(route('leaves.index'), {field: field._value, order: v})
 }
 
 </script>
