@@ -14,7 +14,7 @@ class Personnel extends Model
     /** @use HasFactory<\Database\Factories\PersonnelFactory> */
     use HasFactory;
 
-    protected $fillable = ['ppr', 'cnie','situation','firstname', 'lastname', 'driving_license', 'birthdate', 'recruitment_date', 'is_driver', 'children', 'department_id'];
+    protected $fillable = ['ppr', 'cnie','grade','situation','firstname', 'lastname', 'driving_license', 'birthdate', 'recruitment_date', 'is_driver', 'children', 'department_id'];
     protected $with = ['department'];
     protected $appends = ['fullname'];
 
@@ -27,6 +27,11 @@ class Personnel extends Model
     {
         return Attribute::make(set: fn($value) => Str::upper($value));
     }
+    public function cnie(): Attribute
+    {
+        return Attribute::make(set: fn($value) => Str::upper($value));
+    }
+
 
     public function fullname():Attribute
     {

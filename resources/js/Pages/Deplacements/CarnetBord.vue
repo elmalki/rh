@@ -22,7 +22,6 @@ const search = () => {
 }
 const downloadState =()=> {
     /*
-    form.processing = true
     axios
         .post(
             "carnetDeBordReport",
@@ -33,6 +32,7 @@ const downloadState =()=> {
     return;
     *
      */
+    form.processing = true
     axios
         .post(
             "carnetDeBordReport",
@@ -60,7 +60,7 @@ const downloadState =()=> {
         <div class="px-4 sm:px-6 lg:px-5 bg-transparent py-5  max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"
-                             :pages="[{name:'Maintenances',href:route('maintenances.index'),current:false},{name:'Etat',href:route('maintenances.create'),current:true}]"></Breadcrumbs>
+                             :pages="[{name:'Déplacements',href:route('deplacements.index'),current:false},{name:'Etat',href:route('deplacements.carnetDeBord'),current:true}]"></Breadcrumbs>
 
             </div>
             <div class="mx-auto mt-5 max-w-5xl flex gap-4">

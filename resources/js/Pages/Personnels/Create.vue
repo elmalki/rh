@@ -15,6 +15,7 @@ const situations = ['Célébataire', 'Marié(e)', 'Remarié(e)', 'Divorcé(e)', 
 const form = useForm({
     ppr: null,
     cnie: null,
+    grade: null,
     firstname: null,
     lastname: null,
     recruitment_date: null,
@@ -82,8 +83,12 @@ const add = () => {
                         <label for="Département">Département</label>
                     </FloatLabel>
                     <FloatLabel class="w-full">
-                        <Select class="w-full" v-model="form.situation" :options="situations" filter/>
-                        <label for="Département">Situation familiale</label>
+                        <InputText v-model="form.grade" type="text" class="w-full"/>
+                        <label>Grade</label>
+                        <Message v-if="errors.grade" severity="error" size="small" variant="simple">{{
+                                errors.grade
+                            }}
+                        </Message>
                     </FloatLabel>
                 </div>
                 <div class="flex gap-1 mt-3">
@@ -96,8 +101,12 @@ const add = () => {
                         <label for="recruitment_date">Date de recrutement</label>
                     </FloatLabel>
                 </div>
-                <div class="flex gap-1 mt-3" v-if="form.situation!=='Célébataire'">
+                <div class="flex gap-1 mt-3" >
                     <FloatLabel class="w-1/2">
+                        <Select class="w-full" v-model="form.situation" :options="situations" filter/>
+                        <label for="Département">Situation familiale</label>
+                    </FloatLabel>
+                    <FloatLabel class="w-1/2" v-if="form.situation!=='Célébataire'">
                         <InputText v-model="form.children" type="number" class="w-full"/>
                         <label>Nombre d'enfant</label>
                         <Message v-if="errors.children" severity="error" size="small" variant="simple">{{

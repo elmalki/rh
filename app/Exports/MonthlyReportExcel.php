@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Maintenance;
+use App\Models\Setting;
 use App\Models\MonthlyReport;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -24,7 +25,7 @@ class MonthlyReportExcel implements FromView,WithStyles
         $this->n_operations = $items->count();
         $this->n_cars = $items->unique('car_id')->count();
         $items =  $items->groupBy('car_id');
-        return view('pdf.report.monthlyReportExcel',['items'=>$items,'date'=>strtoupper($this->request['data'])]);
+        return view('pdf.report.monthlyReportExcel',['settings'=>Setting::all(),'items'=>$items,'date'=>strtoupper($this->request['data'])]);
     }
     public function styles(Worksheet $sheet)
     {
@@ -41,7 +42,7 @@ class MonthlyReportExcel implements FromView,WithStyles
         $sheet->getColumnDimension('F')->setWidth(13);
         $sheet->getColumnDimension('G')->setWidth(11.80);
         $sheet->getColumnDimension('H')->setWidth(31);
-        $total_lines = $this->n_operations+$this->n_cars*3+21;
+        $total_lines = $this->n_operations+$this->n_cars*4+33;
         $sheet->getPageSetup()->setPrintArea('A1:H'.$total_lines);
 
         // Page orientation and size

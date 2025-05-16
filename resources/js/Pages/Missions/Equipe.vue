@@ -21,7 +21,7 @@ watch(form,async (newval, old) => {
     <div>
         <div class="flex gap-1">
             <FloatLabel class="w-1/4">
-                <Select class="w-full h-20 items-center text-center" as="div" v-model="form.car_id" :options="cars" optionLabel="plate"
+                <Select class="w-full h-20 items-center text-center" as="div" v-model="form.car_id" :options="cars" :optionLabel="item=>`${item.car_type?.label} ${item.car_brand?.label} ${item.plate}`"
                         option-value="id"/>
                 <label for="cars">Véhicule</label>
             </FloatLabel>

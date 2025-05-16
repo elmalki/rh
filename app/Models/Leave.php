@@ -27,9 +27,9 @@ class Leave extends Model
         return Attribute::make(get: fn()=>Carbon::parse($this->start_date)->diffInDays(Carbon::parse($this->end_date)));
     }
     public function startDate():Attribute{
-        return Attribute::make(set:fn($value)=>Carbon::parse($value)->format('Y-m-d'));
+        return Attribute::make(set:fn($value)=>Carbon::parse($value)->addHour()->format('Y-m-d'));
     }
     public function endDate():Attribute{
-        return Attribute::make(set:fn($value)=>Carbon::parse($value)->format('Y-m-d'));
+        return Attribute::make(set:fn($value)=>Carbon::parse($value)->addHour()->format('Y-m-d'));
     }
 }

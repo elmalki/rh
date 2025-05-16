@@ -30,6 +30,7 @@
                     <Column field="lastname" header="Nom" sortable></Column>
                     <Column field="birthdate" header="Date de naissance" sortable></Column>
                     <Column field="recruitment_date" header="Date de recrutement" sortable></Column>
+                    <Column field="grade" header="Grade" sortable></Column>
                     <Column field="situation" header="Situation familiale" sortable></Column>
                     <Column field="children" header="Nombre d'enfants" sortable></Column>
                     <Column field="department.label" header="Département" ></Column>

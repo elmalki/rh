@@ -43,8 +43,8 @@
                     <Column header="Véhicules">
                         <template #body="slotProps">
                             <div class="mb-2" v-for="e in slotProps.data.equipes">
-                                <span class="bg-blue-500 px-2 py-1 text-white ">
-                                    {{ e.car.plate }}
+                                <span class="bg-teal-700 px-2 py-1 text-white ">
+                                   {{ e.car.car_brand?.label }} {{ e.car.plate }}
                                 </span>
                             </div>
                         </template>
@@ -52,9 +52,15 @@
                     <Column header="Actions">
                         <template #body="slotProps">
                             <div class="flex gap-1">
-                                <PencilIcon v-if="can('Modifier bordereau')"
-                                            class="h-6 text-teal-500  hover:text-teal-600 focus:text-teal-600"
-                                            @click="router.get(route('missions.edit',{mission:slotProps.data.id}))"></PencilIcon>
+                                <div class="flex px-2 py-1 bg-teal-500 hover:bg-teal-600 text-white uppercase text-sm"  @click="router.get(route('missions.edit',{mission:slotProps.data.id}))">
+                                <PencilIcon class="h-4" ></PencilIcon>
+                                <span>Modifier</span>
+                                </div>
+
+                                <a :href="route('missions.ordre-de-mission',{mission:slotProps.data.id})" class="flex px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-sm" target="_blank">
+                                    <DocumentArrowDownIcon class="h-4"></DocumentArrowDownIcon>
+                                    <span class="uppercase">Order de mission</span>
+                                </a>
                                 <!--TrashIcon class=" h-6 text-red-500 hover:text-red-600 focus:text-red-600"></TrashIcon-->
                             </div>
                         </template>
@@ -77,7 +83,7 @@
 </template>
 <script setup>
 import "vue3-pdf-app/dist/icons/main.css";
-import {PencilIcon} from '@heroicons/vue/20/solid'
+import {PencilIcon, DocumentArrowDownIcon} from '@heroicons/vue/20/solid'
 import DataTable from 'primevue/datatable';
 import Paginator from 'primevue/paginator';
 import Column from 'primevue/column';

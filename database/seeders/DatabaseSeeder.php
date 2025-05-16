@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([SettingSeeder::class]);
         // User::factory(10)->create();
-
-        User::factory()->create([
+        /*User::factory()->create([
             'login' => 'yelmalki',
             'nom' => 'el malki',
             'prenom' => 'yassine',
@@ -30,6 +30,6 @@ class DatabaseSeeder extends Seeder
         Paper::create(['label'=>'Assurance']);
         Paper::create(['label'=>'Visite technique']);
         CarBrand::factory(4)->create();
-        CarType::factory(2)->create();
+        CarType::factory(2)->create();*/
     }
 }

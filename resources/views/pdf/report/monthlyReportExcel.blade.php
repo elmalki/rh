@@ -131,10 +131,10 @@
     <tr>
         <td></td>
         <td></td>
-        <td colspan="2" bgcolor="#add8e6" style="border:1px solid #000;font-weight: bold; text-align: center;">TOTAL ({{$total_gasoils-$total_lubrifiants+$total_entretients}})</td>
+        <td colspan="2" bgcolor="#add8e6" style="border:1px solid #000;font-weight: bold; text-align: center;">TOTAL ({{$total_gasoils+$total_entretients}})</td>
         <td bgcolor="#add8e6" data-format="0.00" style="border:1px solid #000;font-weight: bold; text-align: center;">{{$total_gasoils}}</td>
         <td bgcolor="#add8e6" data-format="0.00" style="border:1px solid #000;font-weight: bold; text-align: center;">{{$total_lubrifiants}}</td>
-        <td bgcolor="#add8e6" data-format="0.00" style="border:1px solid #000;font-weight: bold; text-align: center;">{{$total_entretients}}</td>
+        <td bgcolor="#add8e6" data-format="0.00" style="border:1px solid #000;font-weight: bold; text-align: center;">{{$total_entretients-$total_lubrifiants}}</td>
     </tr>
     <tr></tr>
     <tr bgcolor="#F6BB00">
@@ -153,8 +153,8 @@
     </tr>
     <tr></tr>
     <tr>
-        <td colspan="4" style="text-align: center;">Jamal Radi</td>
-        <td colspan="4"  style="vertical-align: top; text-align: center;">Naima AIT BY</td>
+        <td colspan="4"  style="vertical-align: top; text-align: center;">{{$settings[2]->value}}</td>
+        <td colspan="4" style="text-align: center;">{{$settings[1]->value}}</td>
     </tr>
     <tr></tr>
     <tr></tr>
@@ -171,6 +171,9 @@
     <tr></tr>
     <tr></tr>
     <tr></tr>
+    <tr>
+        <td colspan="8" style="vertical-align: top; text-align: center;">{{$settings[0]->value}}</td>
+    </tr>
     </tbody>
 </table>
 

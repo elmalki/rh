@@ -38,7 +38,9 @@ const downloadState =()=> {
                 blob,
                 "etat_" + moment(form.date).format('MMMM YYYY') + "_.xlsx"
             );
-        });
+        }).catch((e)=>{
+        form.processing=false;
+    });
 }
 </script>
 
@@ -47,13 +49,13 @@ const downloadState =()=> {
         <div class="px-4 sm:px-6 lg:px-5 bg-transparent py-5  max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"
-                             :pages="[{name:'Maintenances',href:route('maintenances.index'),current:false},{name:'Etat',href:route('maintenances.create'),current:true}]"></Breadcrumbs>
+                             :pages="[{name:'Maintenances',href:route('maintenances.index'),current:false},{name:'Etat mensuelle',href:route('maintenances.etatmensuelle'),current:true}]"></Breadcrumbs>
 
             </div>
             <div class="mx-auto mt-5 max-w-5xl flex gap-4">
                 <FloatLabel class="w-1/2">
                     <DatePicker class="w-full" v-model="form.date" view="month" dateFormat="MM yy" />
-                    <label for="type">Type de maintenance</label>
+                    <label for="type">Date</label>
                 </FloatLabel>
                 <PrimaryButton :disabled="!form.date||form.processing" @click="downloadState()" class="bg-orange-600 hover:bg-orange-700"
                 >{{form.processing?'En cours...':'Télécharger'}}

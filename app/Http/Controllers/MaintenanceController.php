@@ -122,7 +122,7 @@ class MaintenanceController extends Controller
 
     public function etat()
     {
-        return Inertia::render('Maintenances/Etat', ['maintenance_types' => MaintenanceType::all()]);
+        return Inertia::render('Maintenances/Etat', ['maintenance_types' => MaintenanceType::whereNotNull('kilometrage')->get()]);
     }
 
     public function getEtat()

@@ -7,21 +7,32 @@ import {useForm} from "@inertiajs/vue3";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {saveAs} from 'file-saver';
 import moment from 'moment';
-import 'moment/dist/locale/fr'; // ✅ Correct path for Vite + ES Modules
+import 'moment/dist/locale/fr';
+import {ExclamationTriangleIcon} from "@heroicons/vue/20/solid/index.js"; // ✅ Correct path for Vite + ES Modules
 moment.locale('fr'); // Import the French locale
 const items = ref([])
+const no_records = ref(false)
 const props = defineProps({maintenance_types: Array, errors: Object})
 const form = useForm({
     maintenance_type_id: null
 })
+
+watch(()=>form.maintenance_type_id,async (old,new_)=>{
+    if(old!=new_){
+        items.value = [];
+    }
+})
 const search = () => {
+    no_records.value = true;
     axios
         .post('etat', form)
         .then(response => {
             items.value = response.data
+            if(items.value.length)
+                no_records.value = false
         })
 }
 const downloadState =()=> {
@@ -44,7 +55,9 @@ const downloadState =()=> {
                 blob,
                 "etat_" + moment().format("d_M_Y") + "_.pdf"
             );
-        });
+        }).catch((e)=>{
+        form.processing=false;
+    });
 }
 </script>
 
@@ -53,7 +66,7 @@ const downloadState =()=> {
         <div class="px-4 sm:px-6 lg:px-5 bg-transparent py-5  max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"
-                             :pages="[{name:'Maintenances',href:route('maintenances.index'),current:false},{name:'Etat',href:route('maintenances.create'),current:true}]"></Breadcrumbs>
+                             :pages="[{name:'Maintenances',href:route('maintenances.index'),current:false},{name:'Etat par type',href:route('maintenances.etat'),current:true}]"></Breadcrumbs>
 
             </div>
             <div class="mx-auto mt-5 max-w-5xl flex gap-4">
@@ -69,7 +82,7 @@ const downloadState =()=> {
                     </PrimaryButton>
                 </div>
                 <PrimaryButton v-if="items.length" @click="downloadState()" :disabled="form.processing" class="bg-orange-600 hover:bg-orange-700"
-                >Télécharger {{form.processing?'En cours...':'Téléchargement'}}
+                > {{form.processing?'En cours...':'Télécharger'}}
                 </PrimaryButton>
             </div>
         </div>
@@ -115,6 +128,20 @@ const downloadState =()=> {
                 </Column>
 
             </DataTable>
+        </div>
+        <div v-if="no_records" class="max-w-3xl mx-auto">
+            <div class="border-l-4 border-red-400 bg-red-50 p-4">
+                <div class="flex">
+                    <div class="shrink-0">
+                        <ExclamationTriangleIcon class="size-7 text-red-400" aria-hidden="true" />
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-lg text-yellow-700">
+                           Aucun enregistrements trouvés
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </AppLayout>
 </template>

@@ -19,7 +19,8 @@ import {
     MapPinIcon,
     DocumentIcon,
     WrenchScrewdriverIcon,
-    BuildingOfficeIcon
+    BuildingOfficeIcon,
+    TableCellsIcon
 } from "@heroicons/vue/24/outline/index.js";
 defineProps({
     title: String,
@@ -50,7 +51,7 @@ const logout = () => {
         <div class="min-h-screen bg-white">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
@@ -61,7 +62,7 @@ const logout = () => {
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex lg:text-sm">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Tableau de bord
                                 </NavLink>
@@ -157,6 +158,81 @@ const logout = () => {
                                                         <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="deplacementsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('deplacements.*')||route().current('deplacement*')">Déplacement</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PlusCircleIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PlusCircleIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('deplacements.create')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Ajouter
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('deplacements.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste des déplacements
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <TableCellsIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></TableCellsIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('deplacements.carnetDeBord')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Carnet de bord
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </PopoverPanel>
                                     </transition>
@@ -373,6 +449,58 @@ const logout = () => {
                                                         <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
                                                     </div>
                                                 </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <WrenchScrewdriverIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></WrenchScrewdriverIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenancetypes.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Type de maintenances
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <TableCellsIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></TableCellsIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenances.etatmensuelle')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Etat mensuelle
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <TableCellsIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></TableCellsIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('maintenances.etat')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Etat par type
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </PopoverPanel>
                                     </transition>
@@ -516,6 +644,23 @@ const logout = () => {
                                                         <Link :href="route('leavetypes.index')"
                                                               class="block font-semibold text-gray-900">
                                                             Type de congé
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <CalendarDaysIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></CalendarDaysIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('leaves.show_calendar')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Calendrier des congés
                                                             <span class="absolute inset-0"/>
                                                         </Link>
                                                         <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->

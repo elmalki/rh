@@ -29,7 +29,7 @@
             bgcolor="#e1e1e1">DATE
         </td>
         <td colspan="4" style="border:1px solid #000; font-weight: bold; text-align: center; vertical-align: center;"
-            bgcolor="#e1e1e1">DEPLACEMENTS</td>
+            bgcolor="#e1e1e1">DÉPLACEMENTS</td>
         <td rowspan="2" style="border:1px solid #000; font-weight: bold; text-align: center; vertical-align: center;"
             bgcolor="#e1e1e1">NOM DU CONDUCTEUR
         </td>

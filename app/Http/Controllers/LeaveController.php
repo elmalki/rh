@@ -69,4 +69,8 @@ class LeaveController extends Controller
     {
         //
     }
+    public function calendar()
+    {
+        return Leave::whereBetween('start_date',[substr(request()->start,0,10),substr(request()->end,0,10)])->get();
+    }
 }
