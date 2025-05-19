@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="Ajout-Utilisateur">
+    <AppLayout title="Utilisateur-Modification">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-2xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">

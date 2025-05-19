@@ -42,7 +42,7 @@ const removeMaintenanceType = (index) => {
 </script>
 
 <template>
-    <AppLayout title="Ajout de maintenance">
+    <AppLayout title="Maintenance-Ajout">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs  class="mb-4"

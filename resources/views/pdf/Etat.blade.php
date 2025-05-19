@@ -25,11 +25,11 @@
                 <td style="broder:1px solid black"> {{$loop->index+1}}</td>
                 <td style="broder:1px solid black"> {{ $car->car_type->label }} {{  $car->car_brand->label }} {{ $car->model }}</td>
                 <td style="broder:1px solid black"> {{$car->plate}}</td>
-                <td style="broder:1px solid black">  {{ $car->maintenance_types[0]->pivot->km }}</td>
-                <td style="broder:1px solid black">  {{ \Carbon\Carbon::parse($car->maintenance_types[0]->pivot->date)->format('d/m/Y') }}</td>
+                <td style="broder:1px solid black">  {{ $car->maintenance_types->last()->pivot->km }}</td>
+                <td style="broder:1px solid black">  {{ \Carbon\Carbon::parse($car->maintenance_types->last()->pivot->date)->format('d/m/Y') }}</td>
                 <td style="broder:1px solid black">  {{ $car->kilometrage }}</td>
-                <td style="broder:1px solid black">  {{ $car->maintenance_types[0]->pivot->next_km-$car->kilometrage }}</td>
-                <td style="broder:1px solid black">  {!! $car->maintenance_types[0]->pivot->observation !!} </td>
+                <td style="broder:1px solid black">  {{ $car->maintenance_types->last()->pivot->next_km-$car->kilometrage }}</td>
+                <td style="broder:1px solid black">  {!! $car->maintenance_types->last()->pivot->observation !!} </td>
             </tr>
         @endforeach
         </tbody>

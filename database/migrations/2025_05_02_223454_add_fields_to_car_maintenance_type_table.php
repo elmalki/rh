@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('car_maintenance_type', function (Blueprint $table) {
             $table->text('observation')->nullable();
             $table->decimal('montant',12,2)->unsigned()->nullable();
+            $table->boolean('is_last_maintenance_type')->default('false');
             $table->foreignIdFor(\App\Models\Maintenance::class)->nullable()->after('car_id')->constrained();
         });
     }

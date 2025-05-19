@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="Liste des maintenances">
+    <AppLayout title="Maintenances-Liste">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-8xl mx-auto">
             <div class="sm:flex sm:items-center  max-w-7xl mx-auto mb-10">
                 <div class="sm:flex-auto">

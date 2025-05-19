@@ -1,15 +1,42 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
-import Calendar from './Calendar.vue'
-import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/vue/20/solid'
-import { CursorArrowRaysIcon, UsersIcon,TruckIcon } from '@heroicons/vue/24/outline'
+import Table from './Table.vue'
+import Tail from './Stats/Tail.vue'
+import TwoTextTail from './Stats/TwoTextTail.vue'
+import {BanknotesIcon, CursorArrowRaysIcon, FireIcon, TruckIcon, UsersIcon} from '@heroicons/vue/24/outline'
+import {onMounted, ref} from "vue";
+import {ExclamationTriangleIcon} from "@heroicons/vue/20/solid/index.js";
+
+const props = defineProps({
+    items: Array,
+    nbre_de_fonctionnaire: Object,
+    nbre_de_vihecules: Number,
+    nbre_de_conge: Number,
+    budget: Array,
+    marques: Array,
+    carburants: Array,
+    types: Array
+})
 
 const stats = [
 
 
-    { id: 1, name: 'Nombre de fonctionnaires', stat: '71,897', icon: UsersIcon, change: '122', changeType: 'increase' },
-    { id: 2, name: 'Nombre de vihécules', stat: '58.16%', icon: TruckIcon, change: '5.4%', changeType: 'increase' },
+    {
+        id: 1,
+        name: 'Nombre de fonctionnaires',
+        stat: props.nbre_de_fonctionnaire,
+        icon: UsersIcon,
+        change: `Disponible ${props.nbre_de_fonctionnaire - props.nbre_de_conge}`,
+        changeType: 'increase'
+    },
+    {
+        id: 2,
+        name: 'Nombre de vihécules',
+        stat: props.nbre_de_vihecules,
+        icon: TruckIcon,
+        change: '5.4%',
+        changeType: 'increase'
+    },
     { id: 3, name: 'Avg. Click Rate', stat: '24.57%', icon: CursorArrowRaysIcon, change: '3.2%', changeType: 'decrease' },
 ]
 </script>
@@ -18,44 +45,30 @@ const stats = [
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+                Tableau de bord
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-12 bg-gray-50 h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-md sm:rounded-md">
-                    <div>
-                        <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                            <div v-for="item in stats" :key="item.id" class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow-sm sm:px-6 sm:pt-6">
-                                <dt>
-                                    <div class="absolute rounded-md bg-indigo-500 p-3">
-                                        <component :is="item.icon" class="size-6 text-white" aria-hidden="true" />
-                                    </div>
-                                    <p class="ml-16 truncate text-sm font-medium text-gray-500">{{ item.name }}</p>
-                                </dt>
-                                <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                                    <p class="text-2xl font-semibold text-gray-900">{{ item.stat }}</p>
-                                    <p :class="[item.changeType === 'increase' ? 'text-green-600' : 'text-red-600', 'ml-2 flex items-baseline text-sm font-semibold']">
-                                        <ArrowUpIcon v-if="item.changeType === 'increase'" class="size-5 shrink-0 self-center text-green-500" aria-hidden="true" />
-                                        <ArrowDownIcon v-else class="size-5 shrink-0 self-center text-red-500" aria-hidden="true" />
-                                        <span class="sr-only"> {{ item.changeType === 'increase' ? 'Increased' : 'Decreased' }} by </span>
-                                        {{ item.change }}
-                                    </p>
-                                    <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                                        <div class="text-sm">
-                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"
-                                            >View all<span class="sr-only"> {{ item.name }} stats</span></a
-                                            >
-                                        </div>
-                                    </div>
-                                </dd>
-                            </div>
-                        </dl>
-                    </div>
-                    <div class="max-w-7xl mx-auto sm:px-6 mt-8 lg:px-8">
+                <div class="grid grid-cols-3 gap-4 items-stretch">
+                    <Tail :icon="FireIcon" :item="carburants" :title="'Carburants'"></Tail>
+                    <Tail :icon="TruckIcon" :item="types" :title="'Types Vihécules'" color="amber"></Tail>
+                    <Tail :item="marques" :title="'Marques'"></Tail>
+                    <Tail :icon="UsersIcon"
+                          :item="{'Disponible':props.nbre_de_fonctionnaire.Homme+props.nbre_de_fonctionnaire.Femme-props.nbre_de_conge,'En congé':nbre_de_conge,'Hommes':nbre_de_fonctionnaire.Homme,'Femme':nbre_de_fonctionnaire.Femme}"
+                          :title="'Fonctionnaires'"></Tail>
+                    <TwoTextTail   :item1="{icon:BanknotesIcon,title:'Restant',value:budget.restant}"  :item2="{icon:BanknotesIcon,title:'Consommé',value:budget.consomme}"></TwoTextTail>
+                </div>
+
+                <div  v-if="items.length" class="bg-white overflow-hidden  mt-4">
+                    <div class="border-x-8  flex justify-center border-red-500 bg-red-100 border border-red-400 text-red-700 py-4 text-center text-3xl uppercase font-thin">
+                        <ExclamationTriangleIcon class="size-10 text-red-600" aria-hidden="true" />
+                        Liste des maintenances en retard </div>
+                    <Table :items="items" ></Table>
+                    <!--div class="max-w-7xl mx-auto sm:px-6 mt-8 lg:px-8">
                         <Calendar />
-                    </div>
+                    </div-->
                 </div>
             </div>
         </div>

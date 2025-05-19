@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="Utilisateurs">
+    <AppLayout title="Utilisateurs-Liste">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-7xl mx-auto">
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="sm:flex sm:items-center">

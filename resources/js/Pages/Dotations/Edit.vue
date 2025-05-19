@@ -22,7 +22,7 @@ const add = () => {
 </script>
 
 <template>
-    <AppLayout title="Modifier de dotation">
+    <AppLayout title="Dotation-Modification">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"

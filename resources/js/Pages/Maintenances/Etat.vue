@@ -86,7 +86,6 @@ const downloadState =()=> {
                 </PrimaryButton>
             </div>
         </div>
-
         <div v-if="items.length" class="py-10 px-3">
 
             <h1 class="text-3xl font-light text-center py-2">Etat {{ items[0].maintenance_types[0].label }} véhicule commune Massa</h1>
@@ -107,23 +106,23 @@ const downloadState =()=> {
                 <Column field="plate" header="Immatriculation"></Column>
                 <Column header="Ancien Kilométrage">
                     <template #body="slotProps">
-                        {{ slotProps.data.maintenance_types[0].pivot.km }}
+                        {{ slotProps.data.maintenance_types[slotProps.data.maintenance_types.length-1].pivot.km }}
                     </template>
                 </Column>
                 <Column header="Date">
                     <template #body="slotProps">
-                        {{ slotProps.data.maintenance_types[0].pivot.date }}
+                        {{ slotProps.data.maintenance_types[slotProps.data.maintenance_types.length-1].pivot.date }}
                     </template>
                 </Column>
                 <Column field="kilometrage" header="Index compteur actuel"></Column>
                 <Column header="Restant en Km">
                     <template #body="slotProps">
-                        {{ slotProps.data.maintenance_types[0].pivot.next_km - slotProps.data.kilometrage }}
+                        {{ slotProps.data.maintenance_types[slotProps.data.maintenance_types.length-1].pivot.next_km - slotProps.data.kilometrage }}
                     </template>
                 </Column>
                 <Column header="Observations" style="min-width: 200px">
                     <template #body="slotProps">
-                        <span v-html="slotProps.data.maintenance_types[0].pivot.observation"></span>
+                        <span v-html="slotProps.data.maintenance_types[slotProps.data.maintenance_types.length-1].pivot.observation"></span>
                     </template>
                 </Column>
 

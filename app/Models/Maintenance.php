@@ -37,4 +37,5 @@ class Maintenance extends Model
             set: fn ($value) => Carbon::parse($value)->addDay()->format('Y-m-d')
         );
     }
+
 }

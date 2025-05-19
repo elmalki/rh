@@ -56,7 +56,7 @@ const downloadState =()=> {
 </script>
 
 <template>
-    <AppLayout title="Etat de synthèse">
+    <AppLayout title="Carnet-De-Bord">
         <div class="px-4 sm:px-6 lg:px-5 bg-transparent py-5  max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"

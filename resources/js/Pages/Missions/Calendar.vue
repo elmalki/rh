@@ -126,7 +126,7 @@ const fetchCommandes = (start,end)=>{
 </script>
 
 <template>
-    <AppLayout title="Calendrier des missions">
+    <AppLayout title="Missions-Calendrier">
         <div class="mx-auto max-w-7xl h-1/4 my-10" >
             <Breadcrumbs class="mb-4" :pages="[{name:'Missions',href:route('missions.index'),current:false},{name:'Calendrier des missions',href:route('missions.show_calendar'),current:true}]"></Breadcrumbs>
             <ScheduleXCalendar :calendar-app="calendarApp" />

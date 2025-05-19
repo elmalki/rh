@@ -18,6 +18,7 @@ const form = useForm({
     grade: null,
     firstname: null,
     lastname: null,
+    sexe:'Homme',
     recruitment_date: null,
     birthday: null,
     driving_license: null,
@@ -32,7 +33,7 @@ const add = () => {
 </script>
 
 <template>
-    <AppLayout title="Ajout de maintenance">
+    <AppLayout title="Fonctionnaire-Ajout">
         <div class="px-4 sm:px-6 lg:px-8 bg-transparent py-10 h-screen max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <Breadcrumbs class="mb-4"
@@ -103,9 +104,16 @@ const add = () => {
                 </div>
                 <div class="flex gap-1 mt-3" >
                     <FloatLabel class="w-1/2">
+                        <Select class="w-full" v-model="form.sexe" :options="['Homme','Femme']" filter/>
+                        <label for="Département">Sexe</label>
+                    </FloatLabel>
+                    <FloatLabel class="w-1/2">
                         <Select class="w-full" v-model="form.situation" :options="situations" filter/>
                         <label for="Département">Situation familiale</label>
                     </FloatLabel>
+
+                </div>
+                <div class="flex gap-1 mt-3" >
                     <FloatLabel class="w-1/2" v-if="form.situation!=='Célébataire'">
                         <InputText v-model="form.children" type="number" class="w-full"/>
                         <label>Nombre d'enfant</label>

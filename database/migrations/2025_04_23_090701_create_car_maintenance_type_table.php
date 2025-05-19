@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('car_maintenance_type', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(\App\Models\Car::class)->constrained();
             $table->foreignIdFor(\App\Models\MaintenanceType::class)->constrained();
             $table->integer('km')->nullable();
