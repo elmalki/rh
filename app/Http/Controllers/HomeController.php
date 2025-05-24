@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Budget;
 use App\Models\Car;
 use App\Models\CarMaintenance;
+use App\Models\Dotation;
 use App\Models\Leave;
 use App\Models\Personnel;
 use Carbon\Carbon;
@@ -29,7 +30,6 @@ class HomeController extends Controller
         $budget = Budget::select(['value', 'remaining'])
             ->whereYear('created_at', Carbon::now()->year)
             ->get();
-
         $budget = [
             'restant' => $budget->sum('remaining'),
             'consomme' => $budget->sum('value')-$budget->sum('remaining'),
@@ -39,6 +39,14 @@ class HomeController extends Controller
         })
             ->with(['car','maintenance_type'])
             ->get();
-        return Inertia::render('Dashboard',compact('items','nbre_de_fonctionnaire','nbre_de_vihecules', 'nbre_de_conge','marques','carburants','types','budget'));
+
+       $dotations = Dotation::select([DB::raw('Month(created_at) as mois'),'value'])->whereYear('created_at', Carbon::now()->year)->get()->mapToGroups(function ( $item, int $key) {
+            return [$item->mois => $item->value];
+        });;
+        $budgets = Budget::select([DB::raw('Month(created_at) as mois'),'value'])->whereYear('created_at', Carbon::now()->year)->get()->mapToGroups(function ( $item, int $key) {
+            return [$item->mois => $item->value];
+        });
+
+        return Inertia::render('Dashboard',compact('items','nbre_de_fonctionnaire','nbre_de_vihecules', 'nbre_de_conge','marques','carburants','types','budget','dotations','budgets'));
     }
 }

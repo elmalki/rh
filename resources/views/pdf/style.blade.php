@@ -25,6 +25,9 @@
         background-color: #b5b5b5 !important;
         padding: 5px;
         text-align: center;
+        justify-items: center;
+        align-items: center;
+        vertical-align: middle !important;
     }
 
     td {

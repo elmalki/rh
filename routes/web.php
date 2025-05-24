@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\ReportController;
+use App\Models\DailyWorker;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::get('/test',function(){
+
+});
 Route::get('/ordre-de-mission/{mission}',[\App\Http\Controllers\MissionController::class,'orderDeMission'])->name('missions.ordre-de-mission');
 
 Route::middleware([
@@ -31,6 +35,7 @@ Route::middleware([
     Route::resource('departments', \App\Http\Controllers\DepartmentController::class);
     Route::resource('maintenances', \App\Http\Controllers\MaintenanceController::class);
     Route::resource('personnels', \App\Http\Controllers\PersonnelController::class);
+    Route::resource('dailyworkers', \App\Http\Controllers\DailyWorkerController::class);
     Route::resource('budgets', \App\Http\Controllers\BudgetController::class);
     Route::resource('dotations', \App\Http\Controllers\DotationController::class);
     Route::resource('missions', \App\Http\Controllers\MissionController::class);
@@ -38,10 +43,15 @@ Route::middleware([
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::resource('roles', \App\Http\Controllers\RoleController::class);
     Route::resource('permissions', \App\Http\Controllers\PermissionController::class);
+    Route::resource('pointages',\App\Http\Controllers\PointageController::class);
     Route::get('etat-par-type',[\App\Http\Controllers\MaintenanceController::class,'etat'])->name('maintenances.etat');
     Route::post('etat',[\App\Http\Controllers\MaintenanceController::class,'getEtat'])->name('maintenances.getEtat');
     Route::post('etatPdf',[\App\Http\Controllers\MaintenanceController::class,'getEtatPdf'])->name('maintenances.getEtatPdf');
-
+    Route::get('payment',function (){
+        return Inertia::render('DailyWorkers/Payment');
+    })->name('pointages.payment');
+    Route::get('payment-test',[\App\Http\Controllers\PointageController::class,'test'])->name('pointages.payment_test');
+    Route::post('WorkersPayment',[\App\Http\Controllers\PointageController::class,'WorkersPayment'])->name('pointages.WorkersPayment');
     //calendars
     Route::get('missions-calendar',function (){
         return Inertia::render('Missions/Calendar');

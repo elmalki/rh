@@ -126,6 +126,7 @@ return [
     */
 
     'custom' => [
+
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -143,6 +144,7 @@ return [
     */
 
     'attributes' => [
+        'wage'=>'salaire journalier',
         'name'                  => 'nom',
         'username'              => "nom d'utilisateur",
         'email'                 => 'adresse courriel',

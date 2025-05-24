@@ -14,8 +14,8 @@ const sum = a => eval(a.join('+'));
         <!-- Info Column -->
         <div class=" bg-teal-400 p-3 text-white text-lg justify-center items-center  h-full">
             <div v-for="key in Object.keys(item)"  class="flex justify-between border-b pb-2">
-                <span class="">{{key}}</span>
-                <span class=" font-medium">{{item[key]}}</span>
+                <span class="font-thin">{{key}}</span>
+                <span class=" font-bold text-xl">{{item[key]}}</span>
             </div>
         </div>
 </div>

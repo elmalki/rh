@@ -12,7 +12,7 @@ import {Popover, PopoverButton, PopoverGroup, PopoverPanel} from '@headlessui/vu
 import {ChevronDownIcon} from "@heroicons/vue/20/solid/index.js";
 import {
     PlusCircleIcon,
-    MinusCircleIcon,
+    PencilSquareIcon,
     ListBulletIcon,
     CalendarDaysIcon,
     BarsArrowDownIcon,
@@ -570,6 +570,98 @@ const logout = () => {
                                                         <Link :href="route('departments.index')"
                                                               class="block font-semibold text-gray-900">
                                                             Départements
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </PopoverPanel>
+                                    </transition>
+                                </Popover>
+                                <Popover class="relative">
+                                    <PopoverButton
+                                        ref="missionsbutton"
+                                        @mouseenter="$event.target.click()"
+                                        class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                                        <NavLink :active="route().current('dailyworker*')||route().current('pointages*')">Ouvriers PN</NavLink>
+                                        <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true"/>
+                                    </PopoverButton>
+                                    <transition enter-active-class="transition ease-out duration-200"
+                                                enter-from-class="opacity-0 translate-y-1"
+                                                enter-to-class="opacity-100 translate-y-0"
+                                                leave-active-class="transition ease-in duration-150"
+                                                leave-from-class="opacity-100 translate-y-0"
+                                                leave-to-class="opacity-0 translate-y-1">
+                                        <PopoverPanel
+                                            @mouseleave="pButton.el.click()"
+                                            class="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                                            <div class="p-4">
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PlusCircleIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PlusCircleIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('dailyworkers.create')"
+
+                                                              class="block font-semibold text-gray-900">
+                                                            Ajouter
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <ListBulletIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></ListBulletIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('dailyworkers.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Liste
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <PencilSquareIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></PencilSquareIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('pointages.index')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Pointages
+                                                            <span class="absolute inset-0"/>
+                                                        </Link>
+                                                        <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
+                                                    <div
+                                                        class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                        <TableCellsIcon
+                                                            class="size-6 text-gray-600 group-hover:text-indigo-600"
+                                                            aria-hidden="true"></TableCellsIcon>
+                                                    </div>
+                                                    <div class="flex-auto">
+                                                        <Link :href="route('pointages.payment')"
+                                                              class="block font-semibold text-gray-900">
+                                                            Paiement Mensuelle
                                                             <span class="absolute inset-0"/>
                                                         </Link>
                                                         <!--p class="mt-1 text-gray-600">Ajouter un nouveau bordereaux</p-->
