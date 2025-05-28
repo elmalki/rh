@@ -9,7 +9,7 @@ use App\Models\Paper;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Hash;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -19,12 +19,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([SettingSeeder::class]);
         // User::factory(10)->create();
-        /*User::factory()->create([
-            'login' => 'yelmalki',
-            'nom' => 'el malki',
-            'prenom' => 'yassine',
-            'email' => 'yassine.elmalki@gmail.com',
+        User::factory()->create([
+            'login' => 'admin',
+            'nom' => 'MASSA',
+            'prenom' => 'Admin',
+            'email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
         ]);
+        /*
         Fuel::create(['label'=>'Diesel']);
         Paper::create(['label'=>'Carte grise']);
         Paper::create(['label'=>'Assurance']);
