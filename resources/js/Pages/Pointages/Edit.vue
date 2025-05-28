@@ -29,15 +29,23 @@
                 <div class="col-span-3 h-full">
                     <FloatLabel class="h-full">
                         <MultiSelect id="over_label" v-model="form.workers" :options="workers"
-                                     option-label="nom_complet" filter display="chip" class="w-full h-full">
-                            <template #chip="{value}">
-                            <span class="bg-amber-400 text-sm px-2 py-1 text-black justify-center items-center">{{ value.nom_complet }}
-                            <button
-                                @click.stop="removeChip(value)"
-                                class="ml-1 text-black text-md run dev  "
-                            >X
-                            </button>
-                                </span>
+                                     option-label="nom_complet" filter display="chip"
+                                     class="grid grid-cols-4 w-full h-full">
+                            <template #value="slotProps">
+                                <div class="grid grid-cols-5 gap-2 p-2">
+                            <span
+                                v-for="(option, index) in slotProps.value"
+                                :key="index"
+                                class="bg-amber-400 text-sm px-2 py-1 text-black justify-center items-center rounded-full flex justify-between"
+                            >
+                              {{ option.nom_complet }}
+                                 <button
+                                     @click.stop="removeChip(option)"
+                                     class="ml-3 text-black text-md run dev  "
+                                 >X
+                                                </button>
+                            </span>
+                                </div>
                             </template>
                         </MultiSelect>
                         <label for="over_label">Ouvriers</label>
@@ -57,19 +65,16 @@ import Breadcrumbs from "@/Components/Breadcrumbs.vue";
 import DatePicker from "primevue/datepicker";
 import MultiSelect from "primevue/multiselect";
 import FloatLabel from "primevue/floatlabel"
-import {ref} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import moment from "moment";
 import InputNumber from "primevue/inputnumber";
 import Message from "primevue/message";
-import {XCircleIcon} from "@heroicons/vue/24/outline";
 
-const props = defineProps({selected_workers: Array,item:Object,workers:Array,errors:Object})
+const props = defineProps({item: Object, workers: Array, errors: Object})
 const form = useForm({
     ...props.item,
     ids:[],
-    workers: props.selected_workers,
 })
 const removeChip = (item) => {
     form.workers = form.workers.filter(el => el.id != item.id)

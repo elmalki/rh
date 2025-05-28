@@ -30,4 +30,13 @@ class DailyWorker extends Model
     {
         return Attribute::make(get: fn() => $this->prenom.' '.$this->nom);
     }
+
+    public function pointages()
+    {
+        return  $this->belongsToMany(Pointage::class,'pointage_worker','daily_worker_id','pointage_id');
+    }
+    public function dates()
+    {
+        return $this->pointages()->pluck('date')->map(function($el){return substr($el,8,2);});
+    }
 }

@@ -18,27 +18,8 @@ class PointageController extends Controller
      */
     public function index()
     {
-        $dates = Pointage::select('date')
-            ->distinct()
-            ->orderBy('date', 'desc')
-            ->paginate(10);
+        $dates = Pointage::with('workers')->paginate(10);
 
-// Transformer les items de la collection paginée
-        $transformedItems = $dates->getCollection()->map(function ($dateItem) {
-            $workers = \App\Models\Pointage::with('worker')
-                ->whereDate('date', $dateItem->date)
-                ->get(['daily_worker_id', 'wage', 'date','id']);
-
-            return [
-                'date' => $dateItem->date,
-                'workers' => $workers
-            ];
-        });
-
-// Réassigner la collection transformée à l'objet paginé
-        $dates->setCollection($transformedItems);
-
-// Retourner la pagination corrigée à Inertia
         return Inertia::render('Pointages/Index', [
             'items' => $dates,
             'sort_fields' => request()
@@ -51,7 +32,7 @@ class PointageController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Pointages/Create',['wage'=>Pointage::latest()->first()->wage,'workers'=>DailyWorker::all()]);
+        return Inertia::render('Pointages/Create',['wage'=>Pointage::latest()->first()?->wage,'workers'=>DailyWorker::all()]);
     }
 
     /**
@@ -60,14 +41,8 @@ class PointageController extends Controller
     public function store(StorePointageRequest $request)
     {
         $date =  Carbon::parse($request->date)->addHour()->format('Y-m-d');
-        foreach ($request->workers as $dailyworker) {
-            $old = Pointage::where('date',$date)->where('daily_worker_id',$dailyworker['id'])->first();
-            if($old){
-                $old->update(['wage'=>$request->wage]);
-                continue;
-            }
-            Pointage::create(['daily_worker_id'=>$dailyworker['id'],'date'=>$date,'wage'=>$request->wage]);
-        }
+        $pointage = Pointage::updateOrCreate(['date'=>$date],['wage'=>$request->wage]);
+        $pointage->workers()->sync(collect($request->workers)->pluck('id')->toArray());
         return redirect()->route('pointages.index')->banner( 'Pointages crée avec succès.');
 
     }
@@ -85,8 +60,7 @@ class PointageController extends Controller
      */
     public function edit(Pointage $pointage)
     {
-        $workers_ids = Pointage::where('date',$pointage->date)->pluck('daily_worker_id')->toArray();
-        return Inertia::render('Pointages/Edit',['item'=>$pointage,'selected_workers'=>DailyWorker::whereIn('id',$workers_ids)->get(),'workers'=>DailyWorker::all()]);
+        return Inertia::render('Pointages/Edit',['item'=>$pointage->load('workers'),'workers'=>DailyWorker::all()]);
     }
 
     /**
@@ -94,21 +68,9 @@ class PointageController extends Controller
      */
     public function update(UpdatePointageRequest $request, Pointage $pointage)
     {
-        $pointages = Pointage::where('date',$pointage->date)->get();
-        $ids = [];
         $date =  Carbon::parse($request->date)->addHour()->format('Y-m-d');
-        foreach ($pointages as $pointage) {
-            if(!in_array($pointage->daily_worker_id,$request->ids)){
-                $pointage->delete();
-            }else{
-                $pointage->update(['date'=>$date,'wage'=>$request->wage]);
-               $ids[]= $pointage->daily_worker_id;
-            }
-        }
-        $ids = array_diff($request->ids,$ids);
-        foreach ($ids as $id) {
-            Pointage::create(['daily_worker_id'=>$id,'date'=>$date,'wage'=>$request->wage]);
-        }
+        $pointage->update(['date'=>$date,'wage'=>$request->wage]);
+        $pointage->workers()->sync($request->ids);
         return redirect()->route('pointages.index')->banner('Pointage modifié avec succès');
     }
 
@@ -124,9 +86,18 @@ class PointageController extends Controller
     {
         $start = '01'.Carbon::parse(request()->date)->format('/m/Y');
         $end = Carbon::parse(request()->date)->lastOfMonth()->format('d/m/Y');
-        $items =  Pointage::whereMonth('date',(int) request()->month)->whereYear('date',(int) request()->year)->orderBy('daily_worker_id')->get()->groupBy('daily_worker_id');
        // return $items;
-        $pdf = Pdf::loadView('pdf.workersPayment', ['title_date' => request()->title_date, 'items' => $items,'start'=>$start,'end'=>$end])
+        $items =  DailyWorker::whereHas('pointages', function ($query) {
+            $query->whereYear('date', request()->year)
+                ->whereMonth('date', request()->month);
+        })->with(['pointages' => function ($query) {
+            $query->whereYear('date', request()->year)
+                ->whereMonth('date', request()->month);
+        }])->get();
+        $items->each(function ($item) {
+            $item['dates'] = $item['pointages']->pluck('date')->map(function($el){return substr($el,8,2);}); ;
+        });
+        $pdf = Pdf::loadView('pdf.payment', ['title_date' => request()->title_date, 'workers' => $items,'start'=>$start,'end'=>$end])
             ->setPaper('A4', 'landscape');
         return $pdf->stream();
     }
@@ -134,9 +105,18 @@ class PointageController extends Controller
     {
         $start = Carbon::parse('2025-05-01')->format('d/m/Y');
         $end = Carbon::parse('2025-05-01')->lastOfMonth()->format('d/m/Y');
-        $items =  Pointage::whereMonth('date',5)->whereYear('date',2025)->orderBy('daily_worker_id')->get()->groupBy('daily_worker_id');
-        // return $items;
-        $pdf = Pdf::loadView('pdf.workersPayment', ['title_date' => 'Mai 2025', 'items' => $items,'start'=>$start,'end'=>$end])
+        $items =  DailyWorker::whereHas('pointages', function ($query) {
+            $query->whereYear('date', 2025)
+                ->whereMonth('date', 5);
+        })->with(['pointages' => function ($query) {
+            $query->whereYear('date', 2025)
+                ->whereMonth('date', 5);
+        }])->get();
+        $items->each(function ($item) {
+            $item['dates'] = $item['pointages']->pluck('date')->map(function($el){return substr($el,8,2);}); ;
+        });
+        return view('pdf.payment', ['title_date' => 'Mai 2025', 'workers' => $items,'start'=>$start,'end'=>$end]);
+        $pdf = Pdf::loadView('pdf.workersPayment', ['title_date' => 'Mai 2025','workers'=>DailyWorker::all(), 'items' => $items,'start'=>$start,'end'=>$end])
             ->setPaper('A4', 'landscape');
         return $pdf->stream();
     }

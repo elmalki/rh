@@ -24,17 +24,17 @@
                             enregistrements trouvé
                         </div>
                     </template>
-                    <Column field="date" header="Date" ></Column>
+                    <Column field="date" header="Date" sortable=""></Column>
                     <Column  header="Salaire journalier" >
                         <template #body="slotProps">
-                            {{slotProps.data.workers[0].wage}} Dhs
+                            {{slotProps.data.wage}} Dhs
                         </template>
                     </Column>
                     <Column header="Ouvriers" >
                         <template #body="slotProps">
                             <div class="grid lg:grid-cols-6 md:grid-cols-4 sm:lg:grid-cols-2 gap-1">
                             <span class="px-3 py-1 bg-teal-600 text-sm text-white" v-for="item in slotProps.data.workers">
-                                {{item.worker.nom_complet}}
+                                {{item.nom_complet}}
                             </span>
                             </div>
                         </template>
@@ -44,7 +44,7 @@
                             <div class="flex gap-1">
                                 <PencilIcon
                                     class="h-6 text-teal-500  hover:text-teal-600 focus:text-teal-600"
-                                    @click="router.get(route('pointages.edit',{pointage:slotProps.data.workers[0]?.id}))"></PencilIcon>
+                                    @click="router.get(route('pointages.edit',{pointage:slotProps.data.id}))"></PencilIcon>
                                 <!--TrashIcon class=" h-6 text-red-500 hover:text-red-600 focus:text-red-600"></TrashIcon-->
                             </div>
                         </template>

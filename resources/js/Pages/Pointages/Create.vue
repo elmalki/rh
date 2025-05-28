@@ -6,7 +6,7 @@
                              :pages="[{name:'Pointages',href:route('pointages.index'),current:false},{name:'Ajout de pointage',href:route('pointages.create'),current:true}]"></Breadcrumbs>
 
             </div>
-            <h2 class="text-2xl font-bold mb-4 text-gray-800 w-full text-center  decoration-indigo-400 underline underline-offset-1">Pointage journalier des ouvriers</h2>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 w-full text-center  decoration-indigo-500 underline underline-offset-1">Pointage journalier des ouvriers</h2>
             <div class="w-full">
                 <FloatLabel class="w-full ">
                     <InputNumber required v-model="form.wage" step="0.01" inputId="currency-morocco" mode="currency" currency="MAD" currencyDisplay="code" locale="fr-FR" fluid />
@@ -30,14 +30,21 @@
                     <FloatLabel class="h-full">
                         <MultiSelect id="over_label" v-model="form.workers" :options="workers"
                                      option-label="nom_complet" filter display="chip" class="w-full h-full">
-                            <template #chip="{value}">
-                            <span class="bg-amber-400 text-sm px-2 py-1 text-black justify-center items-center">{{ value.nom_complet }}
-                            <button
-                                @click.stop="removeChip(value)"
-                                class="ml-1 text-black text-md run dev  "
-                            >X
-                            </button>
-                                </span>
+                            <template #value="slotProps">
+                                <div class="grid grid-cols-5 gap-2 p-2">
+                            <span
+                                v-for="(option, index) in slotProps.value"
+                                :key="index"
+                                class="bg-amber-400 text-sm px-2 py-1 text-black justify-center items-center rounded-full flex justify-between"
+                            >
+                              {{ option.nom_complet }}
+                                 <button
+                                     @click.stop="removeChip(option)"
+                                     class="ml-3 text-black text-md run dev  "
+                                 >X
+                                                </button>
+                            </span>
+                                </div>
                             </template>
                         </MultiSelect>
                         <label for="over_label">Ouvriers</label>
@@ -72,7 +79,7 @@ const form = useForm({
     date:new Date(),
 })
 const removeChip = (item) => {
-    form.pointages = form.pointages.filter(el => el.id != item.id)
+    form.workers = form.workers.filter(el => el.id != item.id)
 }
 const add = ()=>{
     form.post(route('pointages.store'),form)
